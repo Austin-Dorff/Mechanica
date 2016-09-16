@@ -1,0 +1,12 @@
+itemGroup.Mechanica=Mechanica
+
+tile.blockOres.CopperOre.name=Copper Ore
+tile.blockOres.TinOre.name=Tin Ore
+tile.blockOres.LeadOre.name=Lead Ore
+tile.blockOres.NickelOre.name=Nickel Ore
+tile.blockOres.SilverOre.name=Silver Ore
+
+item.CopperIngot.name=Copper Ingot
+item.TinIngot.name=Tin Ingot
+item.SilverIngot.name=Silver Ingot
+item.LeadIngot.name=Lead Ingot

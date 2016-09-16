@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mechanica",
+  "name": "Mechanica",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["thechief5456"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
