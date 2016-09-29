@@ -1,0 +1,29 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "is_active=true,location=default": {
+            "model": "mechanica:blockAFCDefault"
+        },
+        "is_active=false,location=default": {
+            "model": "mechanica:blockAFCDefault"
+        },
+        "is_active=true,location=edge": {
+            "model": "mechanica:blockAFCEdge"
+        },
+        "is_active=false,location=edge": {
+            "model": "mechanica:blockAFCEdge"
+        },
+        "is_active=true,location=furnace": {
+            "model": "mechanica:blockAFCActive"
+        },
+        "is_active=false,location=furnace": {
+            "model": "mechanica:blockAFCInactive"
+        },
+        "inventory": {
+            "model": "mechanica:blockAFCDefault"
+        },
+        "normal": {
+            "model": "mechanica:blockAFCDefault"
+        }
+    }
+}

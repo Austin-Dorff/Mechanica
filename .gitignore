@@ -1,32 +1,22 @@
-/.classpath
-/.gradle
-/gradlew.bat
-/.metadata
-/.project
-/.settings
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
 
-/CREDITS-fml.txt
-/eula.txt
-/forge-1.7.10-10.13.4.1614-1.7.10-changelog.txt
-/LICENSE-fml.txt
-/MinecraftForge-Credits.txt
-/MinecraftForge-License.txt
-/options.txt
-/README.txt
-/server.properties
-/usernamecache.json
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
 
+# gradle
+build
+.gradle
 
-/asm
-/bin
-/build
-/config
-/crash-reports
-/eclipse
-/Forge
-/gradlew
-/lib
-/logs
-/mods
-/resourcepacks
-/saves
+# other
+eclipse
+run

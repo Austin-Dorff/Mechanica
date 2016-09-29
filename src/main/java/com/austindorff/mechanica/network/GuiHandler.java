@@ -1,29 +1,32 @@
 package com.austindorff.mechanica.network;
 
-import com.austindorff.mechanica.client.gui.GuiBasicSmelter;
-import com.austindorff.mechanica.container.machine.ContainerBasicSmelter;
+import com.austindorff.mechanica.client.gui.GuiAdvancedFurnaceCasing;
+import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
 
-import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler {
-
-	public static final int BASIC_MACHINE_CASING_MULTIBLOCK = 0;
-
+	
+	public static final int ADVANCED_FURNACE_CASING = 0;
+	
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-	    if (id == BASIC_MACHINE_CASING_MULTIBLOCK)
-	        return new ContainerBasicSmelter();
-
-	    return null;
+		if (id == ADVANCED_FURNACE_CASING) {
+			return new ContainerAdvancedFurnaceCasing(player.inventory, ((TileAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z))));
+		}	
+		return null;
 	}
-
+	
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-	    if (id == BASIC_MACHINE_CASING_MULTIBLOCK)
-	        return new GuiBasicSmelter(new ContainerBasicSmelter());
-
+	    if (id == ADVANCED_FURNACE_CASING) {
+	    	TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z)));
+	        return new GuiAdvancedFurnaceCasing(player.inventory, tile, new ContainerAdvancedFurnaceCasing(player.inventory, tile)); 
+	    }
 	    return null;
 	}
 	
