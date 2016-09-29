@@ -9,16 +9,12 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PacketHandler {
 	private static int					packetId	= 0;
 													
-	public PacketHandler() {
+	public PacketHandler(String channelName) {
+		Reference.CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel("myChannel");
 	}
 	
 	public static int nextID() {
 		return packetId++;
-	}
-	
-	public static void registerMessages(String channelName) {
-		Reference.CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(channelName);
-		registerMessages();
 	}
 	
 	public static void registerMessages() {

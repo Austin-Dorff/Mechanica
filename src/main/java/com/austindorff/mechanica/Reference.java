@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.austindorff.mechanica.block.MechanicaBlocks;
+import com.austindorff.mechanica.network.packet.PacketHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,8 +41,8 @@ public class Reference {
 	public static final String			MOD_ID						= "mechanica";
 	public static final String			MOD_NAME					= "Mechanica";
 	public static final String			MOD_VERSION					= "0.0.1";
-	public static final String			networkChannelName			= Reference.MOD_ID;
 	public static SimpleNetworkWrapper	CHANNEL;
+	public static PacketHandler			PACKET_HANDLER;
 										
 	// Proxies
 	public static final String			COMMON_PROXY_LOCATION		= "com.austindorff.mechanica.network.proxy.CommonProxy";

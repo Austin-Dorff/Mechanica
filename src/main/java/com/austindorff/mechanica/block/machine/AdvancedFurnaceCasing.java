@@ -11,7 +11,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -138,13 +137,12 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	public void breakBlock(World world, BlockPos coords, IBlockState blockState) {
 		TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) world.getTileEntity(coords));
 		super.breakBlock(world, coords, blockState);
-		if (tile != null && !tile.checkMultiBlockForm()) {
+		if (tile != null && tile.checkMultiBlockForm()) {
 			BlockPos pos = new BlockPos(tile.getMasterX(), tile.getMasterY(), tile.getMasterZ());
 			TileAdvancedFurnaceCasing master = ((TileAdvancedFurnaceCasing) world.getTileEntity(pos));
 			master.unloadFuel();
 			InventoryHelper.dropInventoryItems(world, pos, master);
-			master.resetStructure();
-			
+			master.resetStructure();	
 		}
 	}
 	

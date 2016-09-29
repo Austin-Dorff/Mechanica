@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
@@ -70,9 +71,8 @@ public class GuiAdvancedFurnaceCasing extends GuiContainer {
 		switch (button.id) {
 			case 0: {
 				if (this.tile.isMaster()) {
-					Reference.CHANNEL.sendToServer(new PacketAdvancedFurnace(this.tile));
-					updateModeButton();
-					drawButton(mouseX, mouseY);
+					this.tile.toggleMode();
+					Reference.CHANNEL.sendToServer(new PacketAdvancedFurnace(this.tile.getPos(), this.tile.writeToNBT(new NBTTagCompound())));
 				}
 				break;
 			}

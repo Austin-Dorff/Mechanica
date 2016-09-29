@@ -1,11 +1,8 @@
 package com.austindorff.mechanica.tileentity.machine;
 
-import java.io.IOException;
-
 import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.MechanicaBlocks;
 import com.austindorff.mechanica.block.machine.AdvancedFurnaceCasing;
-import com.austindorff.mechanica.network.packet.block.machine.PacketAdvancedFurnace;
 import com.austindorff.mechanica.tileentity.TileMultiblockBase;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,8 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IInventory {
 	
@@ -117,7 +112,6 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	}
 	
 	public void toggleMode() {
-		System.out.println("I HIT THE SERVER");
 		if (this.isMaster()) {
 			if (this.mode == 1) {
 				this.mode = 0;
@@ -126,12 +120,10 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 				this.mode = 1;
 				this.modeString = "x2";
 			}
-			this.markDirty();
 		}
 	}
 	
 	public String getModeString() {
-		System.out.println(this.mode);
 		return this.modeString;
 	}
 	
@@ -255,28 +247,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					if (this.cookTime == this.getCookingTime()) {
 						this.cookTime = 0;
 						this.totalCookTime = this.getCookingTime();
-						ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(this.inventory[2]);
-						int amount = this.mode == 1 ? 2 : 1;
-						System.out.println(this.mode);
-						itemstack = new ItemStack(itemstack.getItem(), amount);
-						if (this.inventory[3] == null) {
-							this.inventory[3] = itemstack.copy();
-						} else if (this.inventory[3].getItem() == itemstack.getItem() && (this.inventory[3].stackSize + itemstack.stackSize) <= this.getInventoryStackLimit()) {
-							this.inventory[3].stackSize += itemstack.stackSize;
-						} else if (this.inventory[4] == null) {
-							this.inventory[4] = itemstack.copy();
-						} else if (this.inventory[4].getItem() == itemstack.getItem() && (this.inventory[4].stackSize + itemstack.stackSize) <= this.getInventoryStackLimit()) {
-							this.inventory[4].stackSize += itemstack.stackSize;
-						}
-						fuelLevel -= getSmeltFuelCost();
-						if (fuelLevel < 0) {
-							fuelLevel = 0;
-						}
-						--this.inventory[2].stackSize;
-						
-						if (this.inventory[2].stackSize <= 0) {
-							this.inventory[2] = null;
-						}
+						this.smeltItem();
 					}
 					didUpdate = true;
 				}
@@ -292,6 +263,31 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 			if (didUpdate) {
 				this.markDirty();
 			}
+		}
+	}
+	
+	private void smeltItem() {
+		ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(this.inventory[2]);
+		int amount = this.mode == 1 ? 2 : 1;
+		System.out.println(this.mode);
+		itemstack = new ItemStack(itemstack.getItem(), amount);
+		if (this.inventory[3] == null) {
+			this.inventory[3] = itemstack.copy();
+		} else if (this.inventory[3].getItem() == itemstack.getItem() && (this.inventory[3].stackSize + itemstack.stackSize) <= this.getInventoryStackLimit()) {
+			this.inventory[3].stackSize += itemstack.stackSize;
+		} else if (this.inventory[4] == null) {
+			this.inventory[4] = itemstack.copy();
+		} else if (this.inventory[4].getItem() == itemstack.getItem() && (this.inventory[4].stackSize + itemstack.stackSize) <= this.getInventoryStackLimit()) {
+			this.inventory[4].stackSize += itemstack.stackSize;
+		}
+		fuelLevel -= getSmeltFuelCost();
+		if (fuelLevel < 0) {
+			fuelLevel = 0;
+		}
+		--this.inventory[2].stackSize;
+		
+		if (this.inventory[2].stackSize <= 0) {
+			this.inventory[2] = null;
 		}
 	}
 	

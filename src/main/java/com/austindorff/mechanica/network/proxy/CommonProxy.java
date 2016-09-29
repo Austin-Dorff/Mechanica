@@ -10,7 +10,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class CommonProxy {
 	
 	public void preInit(FMLPreInitializationEvent e) {
-		PacketHandler.registerMessages(Reference.MOD_ID);
+		Reference.PACKET_HANDLER = new PacketHandler(Reference.MOD_ID);
+		PacketHandler.registerMessages();
 	}
 	
 	public void init(FMLInitializationEvent e) {
