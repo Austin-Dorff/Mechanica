@@ -53,7 +53,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 		this.modeString = "x1";
 	}
 	
-	public void unloadFuel() {
+	public void unloadInventory() {
 		if (this.isMaster()) {
 			if (this.fuelLevel >= 64) {
 				if (this.inventory[1] != null) {
@@ -64,6 +64,15 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					this.fuelLevel -= 64;
 					InventoryHelper.spawnItemStack(this.worldObj, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), new ItemStack(Items.LAVA_BUCKET));
 				}
+			}
+			if (this.inventory[2] != null) {
+				InventoryHelper.spawnItemStack(this.worldObj, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), this.inventory[2]);
+			}
+			if (this.inventory[3] != null) {
+				InventoryHelper.spawnItemStack(this.worldObj, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), this.inventory[3]);
+			}
+			if (this.inventory[4] != null) {
+				InventoryHelper.spawnItemStack(this.worldObj, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), this.inventory[4]);
 			}
 		}
 	}
@@ -103,7 +112,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					TileEntity tile = worldObj.getTileEntity(pos);
 					if (tile != null && (tile instanceof TileAdvancedFurnaceCasing)) {
 						if (((x == getMasterX() && z != getMasterZ()) || (z == getMasterZ() && x != getMasterX())) && (y == getMasterY())) {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, this.isActive), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, this.isActive), 3);
 						}
 					}
 				}
@@ -185,14 +194,14 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					BlockPos pos = new BlockPos(x, y, z);
 					TileEntity tile = worldObj.getTileEntity(pos);
 					boolean master = (x == xPos && y == yPos && z == zPos);
-					if (tile != null && (tile instanceof TileAdvancedFurnaceCasing)) {
+					if (tile != null && isCorrectTileEntity(tile)) {
 						((TileAdvancedFurnaceCasing) tile).setMasterCoords(xPos, yPos, zPos);
 						((TileAdvancedFurnaceCasing) tile).setHasMaster(true);
 						((TileAdvancedFurnaceCasing) tile).setIsMaster(master);
 						if (((x == xPos && z != zPos) || (z == zPos && x != xPos)) && (y == yPos)) {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 						} else {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.EDGE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.EDGE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 						}
 					}
 				}
@@ -206,9 +215,9 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 				for (int z = getMasterZ() - 1; z <= getMasterZ() + 1; z++) {
 					BlockPos blockPos = new BlockPos(x, y, z);
 					TileEntity tile = worldObj.getTileEntity(blockPos);
-					if (tile != null && (tile instanceof TileAdvancedFurnaceCasing)) {
+					if (tile != null && isCorrectTileEntity(tile)) {
 						((TileAdvancedFurnaceCasing) tile).reset();
-						worldObj.setBlockState(blockPos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.DEFAULT).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+						worldObj.setBlockState(blockPos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.DEFAULT).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 					}
 				}
 			}
@@ -246,18 +255,18 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					++this.cookTime;
 					if (this.cookTime == this.getCookingTime()) {
 						this.cookTime = 0;
-						this.totalCookTime = this.getCookingTime();
 						this.smeltItem();
 					}
 					didUpdate = true;
 				}
-				if (isActive != shouldBeActive()) {
-					isActive = shouldBeActive();
+				if (this.isActive != shouldBeActive()) {
+					this.isActive = !this.isActive;
 					didUpdate = true;
 					this.toggleActiveState();
 				}
 				if (this.cookTime != 0 && !canSmelt()) {
 					this.cookTime = 0;
+					didUpdate = true;
 				}
 			}
 			if (didUpdate) {
@@ -269,7 +278,6 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	private void smeltItem() {
 		ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(this.inventory[2]);
 		int amount = this.mode == 1 ? 2 : 1;
-		System.out.println(this.mode);
 		itemstack = new ItemStack(itemstack.getItem(), amount);
 		if (this.inventory[3] == null) {
 			this.inventory[3] = itemstack.copy();
@@ -362,7 +370,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 			if (stack != null && stack.stackSize == 0) {
 				stack = null;
 			}
-			if (stack != null && this.isItemValidForSlot(index, stack)) {
+			if (stack != null) {
 				this.inventory[index] = stack;
 			} else {
 				this.inventory[index] = null;
@@ -426,12 +434,12 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	}
 	
 	public int getCookingTime() {
-		return totalCookTime;
+		return this.mode == 1 ? this.totalCookTime * 5 : this.totalCookTime;
 	}
 	
 	public int getSmeltFuelCost() {
 		int regularAmount = 1;
-		return this.mode == 1 ? regularAmount * 3 : regularAmount;
+		return this.mode == 1 ? regularAmount * 4 : regularAmount;
 	}
 	
 	private boolean canSmelt() {
@@ -491,6 +499,10 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	@Override
 	public int getFieldCount() {
 		return 6;
+	}
+	
+	public int getFuelLevel() {
+		return this.fuelLevel;
 	}
 	
 	@Override

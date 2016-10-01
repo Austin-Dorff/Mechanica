@@ -54,6 +54,9 @@ public class GuiAdvancedFurnaceCasing extends GuiContainer {
 		int l = this.getCookProgressScaled(24);
 		this.drawTexturedModalRect(i + 99, j + 35, 176, 60, l, 16);
 		int f = this.getFuelLevelScaled(45);
+		if (f == 0 && this.tile.getFuelLevel() > 0) {
+			f = 1;
+		}
 		this.drawTexturedModalRect(i + 29, j + 21 + 45 - f, 176, 15, 17, f);
 		drawButton(mouseX, mouseY);
 	}
@@ -72,7 +75,7 @@ public class GuiAdvancedFurnaceCasing extends GuiContainer {
 			case 0: {
 				if (this.tile.isMaster()) {
 					this.tile.toggleMode();
-					Reference.CHANNEL.sendToServer(new PacketAdvancedFurnace(this.tile.getPos(), this.tile.writeToNBT(new NBTTagCompound())));
+					Reference.CHANNEL.sendToServer(new PacketAdvancedFurnace(this.tile.getPos()));
 				}
 				break;
 			}
@@ -84,7 +87,7 @@ public class GuiAdvancedFurnaceCasing extends GuiContainer {
 	private void updateModeButton() {
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
-		this.modeButton = new ModeButton(0, i + 70, j + 16, 32, 16, tile.getModeString());
+		this.modeButton = new ModeButton(0, i + 72, j + 16, 32, 16, tile.getModeString());
 		if (this.buttonList.size() == 0) {
 			this.buttonList.add(this.modeButton);
 		} else {
@@ -101,7 +104,7 @@ public class GuiAdvancedFurnaceCasing extends GuiContainer {
 	
 	private int getCookProgressScaled(int pixels) {
 		int i = this.tile.getField(2);
-		int j = this.tile.getField(3);
+		int j = this.tile.getCookingTime();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
 	

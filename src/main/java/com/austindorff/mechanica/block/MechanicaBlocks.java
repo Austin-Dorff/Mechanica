@@ -5,12 +5,14 @@ import java.util.Map;
 
 import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.machine.AdvancedFurnaceCasing;
+import com.austindorff.mechanica.block.wire.BlockWireBase;
 import com.austindorff.mechanica.block.worldgen.BlockOre;
 import com.austindorff.mechanica.block.worldgen.BlockTreeLeaves;
 import com.austindorff.mechanica.block.worldgen.BlockTreeLog;
 import com.austindorff.mechanica.block.worldgen.BlockTreeSapling;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -41,7 +43,8 @@ public class MechanicaBlocks {
 	}
 	
 	private static void initSingletonBlockClasses() {
-		MechanicaBlocks.BLOCKS.put(Reference.ADVANCED_FURNACE_CASING, new AdvancedFurnaceCasing(Reference.ADVANCED_FURNACE_CASING));		
+		MechanicaBlocks.BLOCKS.put(Reference.ADVANCED_FURNACE_CASING_NAME, new AdvancedFurnaceCasing(Reference.ADVANCED_FURNACE_CASING_NAME));
+		MechanicaBlocks.BLOCKS.put(Reference.COPPER_WIRE_NAME, new BlockWireBase(Reference.COPPER_WIRE_NAME, Material.ROCK, 0.5F, 0.5F));
 	}
 
 	private static void initSubBlockClasses() {
@@ -61,10 +64,6 @@ public class MechanicaBlocks {
 		for (String treeSaplingName : Reference.TREE_SAPLING_TYPES) {
 			MechanicaBlocks.BLOCKS.put(treeSaplingName, new BlockTreeSapling(treeSaplingName));
 		}
-	}
-	
-	private static String getBlockName(String typeName, String suffix) {
-		return "block" + typeName + suffix;
 	}
 	
 }

@@ -1,0 +1,74 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "mechanica:blockWireCore"
+    },
+    "variants": {
+        "up": {
+            "true": {
+                "submodel": {
+                    "up": { "model": "mechanica:blockWireConnection_North", "x": 90}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "down": {
+            "true": {
+                "submodel": {
+                    "down": { "model": "mechanica:blockWireConnection_North", "x": 270}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "north": {
+            "true": {
+                "submodel": {
+                    "north": { "model": "mechanica:blockWireConnection_North" }
+                }
+            },
+            "false": {
+
+            }
+        },
+        "east": {
+            "true": {
+                "submodel": {
+                    "east": { "model": "mechanica:blockWireConnection_North", "y": 90}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "south": {
+            "true": {
+                "submodel": {
+                    "south": { "model": "mechanica:blockWireConnection_North", "y": 180}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "west": {
+            "true": {
+                "submodel": {
+                    "west": { "model": "mechanica:blockWireConnection_North", "y": 270}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "normal": {
+            "model": "mechanica:blockWireCore"
+        },
+        "inventory": {
+            "model": "mechanica:blockWireCore"
+        }
+    }
+}

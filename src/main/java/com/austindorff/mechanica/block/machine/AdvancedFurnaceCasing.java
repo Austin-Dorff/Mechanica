@@ -61,7 +61,7 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	
 	@Override
 	public int damageDropped(IBlockState state) {
-		return getMetaFromState(state);
+		return 0;
 	}
 	
 	public static enum EnumType implements IStringSerializable {
@@ -129,21 +129,18 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 		super.onNeighborChange(blockAccess, coords, neighbor);
 		TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) blockAccess.getTileEntity(coords));
 		if (!tile.checkMultiBlockForm()) {
-			tile.resetStructure();
+			if (tile.hasMaster()) {	
+				BlockPos pos = new BlockPos(tile.getMasterX(), tile.getMasterY(), tile.getMasterZ());
+				TileAdvancedFurnaceCasing master = ((TileAdvancedFurnaceCasing) blockAccess.getTileEntity(pos));
+				master.unloadInventory();
+				master.resetStructure();
+			}
 		}
 	}
 	
 	@Override
-	public void breakBlock(World world, BlockPos coords, IBlockState blockState) {
-		TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) world.getTileEntity(coords));
-		super.breakBlock(world, coords, blockState);
-		if (tile != null && tile.checkMultiBlockForm()) {
-			BlockPos pos = new BlockPos(tile.getMasterX(), tile.getMasterY(), tile.getMasterZ());
-			TileAdvancedFurnaceCasing master = ((TileAdvancedFurnaceCasing) world.getTileEntity(pos));
-			master.unloadFuel();
-			InventoryHelper.dropInventoryItems(world, pos, master);
-			master.resetStructure();	
-		}
+	public void breakBlock(World world, BlockPos pos, IBlockState blockState) {
+		super.breakBlock(world, pos, blockState);
 	}
 	
 	@Override

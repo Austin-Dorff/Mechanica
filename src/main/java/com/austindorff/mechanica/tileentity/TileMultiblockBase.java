@@ -28,11 +28,11 @@ public abstract class TileMultiblockBase extends TileEntity implements ITickable
 	}
 	
 	public boolean isNeighborNorth() {
-		return (this.pos.getX() >= (-1 * this.worldObj.getWorldBorder().getSize())) && isNeighborZ(-1);
+		return (this.pos.getZ() >= (-1 * this.worldObj.getWorldBorder().getSize())) && isNeighborZ(-1);
 	}
 	
 	public boolean isNeighborSouth() {
-		return (this.pos.getX() <= (this.worldObj.getWorldBorder().getSize())) && isNeighborZ(1);
+		return (this.pos.getZ() <= (this.worldObj.getWorldBorder().getSize())) && isNeighborZ(1);
 	}
 	
 	public boolean isNeighborEast() {

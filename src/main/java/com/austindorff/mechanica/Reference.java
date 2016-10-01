@@ -35,53 +35,61 @@ public class Reference {
 		for (String type : INGOT_TYPES) {
 			INGOT_TYPES[index++] = normalizeName(type);
 		}
+		index = 0;
+		for (String type : ELECTRIC_WIRE_TYPES) {
+			ELECTRIC_WIRE_TYPES[index++] = normalizeName(type);
+		}
 	}
 	
 	// Mod Class
-	public static final String			MOD_ID						= "mechanica";
-	public static final String			MOD_NAME					= "Mechanica";
-	public static final String			MOD_VERSION					= "0.0.1";
+	public static final String			MOD_ID							= "mechanica";
+	public static final String			MOD_NAME						= "Mechanica";
+	public static final String			MOD_VERSION						= "0.0.1";
 	public static SimpleNetworkWrapper	CHANNEL;
 	public static PacketHandler			PACKET_HANDLER;
 										
 	// Proxies
-	public static final String			COMMON_PROXY_LOCATION		= "com.austindorff.mechanica.network.proxy.CommonProxy";
-	public static final String			SERVER_PROXY_LOCATION		= "com.austindorff.mechanica.network.proxy.ServerProxy";
-	public static final String			CLIENT_PROXY_LOCATION		= "com.austindorff.mechanica.network.proxy.ClientProxy";
-																	
+	public static final String			COMMON_PROXY_LOCATION			= "com.austindorff.mechanica.network.proxy.CommonProxy";
+	public static final String			SERVER_PROXY_LOCATION			= "com.austindorff.mechanica.network.proxy.ServerProxy";
+	public static final String			CLIENT_PROXY_LOCATION			= "com.austindorff.mechanica.network.proxy.ClientProxy";
+																		
 	// Creative Tabs
-	public static CreativeTabs			TAB_MECHANICA				= new CreativeTabs("Mechanica") {
-																		@SideOnly(Side.CLIENT)
-																		public Item getTabIconItem() {
-																			return Item.getItemFromBlock(MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING));
-																		}
-																	};
-																	
+	public static CreativeTabs			TAB_MECHANICA					= new CreativeTabs("Mechanica") {
+																			@SideOnly(Side.CLIENT)
+																			public Item getTabIconItem() {
+																				return Item.getItemFromBlock(MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME));
+																			}
+																		};
+																		
 	// Blocks
 	
-	public static String				ADVANCED_FURNACE_CASING		= "Advanced Furnace Casing";
-																	
-	public static String				BLOCK_PREFIX				= "block";
-																	
-	public static String				COPPER_ORE_NAME				= "Copper Ore";
-	public static String				TIN_ORE_NAME				= "Tin Ore";
-	public static String				SILVER_ORE_NAME				= "Silver Ore";
-	public static String				LEAD_ORE_NAME				= "Lead Ore";
-																	
-	public static String				RUBBER_TREE_LOG_NAME		= "Rubber Tree Log";
-	public static String				RUBBER_TREE_LEAVES_NAME		= "Rubber Tree Leaves";
-	public static String				RUBBER_TREE_SAPLING_NAME	= "Rubber Tree Sapling";
-																	
-	public static String[]				ORE_TYPES					= new String[] { COPPER_ORE_NAME, TIN_ORE_NAME, SILVER_ORE_NAME, LEAD_ORE_NAME };
-																	
-	public static String[]				TREE_LOG_TYPES				= new String[] { RUBBER_TREE_LOG_NAME };
-	public static String[]				TREE_LEAVES_TYPES			= new String[] { RUBBER_TREE_LEAVES_NAME };
-	public static String[]				TREE_SAPLING_TYPES			= new String[] { RUBBER_TREE_SAPLING_NAME };
-																	
-	public static Map<String, String>	BLOCK_UNLOCALIZED_NAMES		= new HashMap<String, String>();
-																	
-	public static Map<String, String>	BLOCK_REGISTRY_NAMES		= new HashMap<String, String>();
-																	
+	public static String				ADVANCED_FURNACE_CASING_NAME	= "Advanced Furnace Casing";
+																		
+	public static String				COPPER_WIRE_NAME				= "Copper Wire";
+																		
+	public static String				BLOCK_PREFIX					= "block";
+																		
+	public static String				COPPER_ORE_NAME					= "Copper Ore";
+	public static String				TIN_ORE_NAME					= "Tin Ore";
+	public static String				SILVER_ORE_NAME					= "Silver Ore";
+	public static String				LEAD_ORE_NAME					= "Lead Ore";
+																		
+	public static String				RUBBER_TREE_LOG_NAME			= "Rubber Tree Log";
+	public static String				RUBBER_TREE_LEAVES_NAME			= "Rubber Tree Leaves";
+	public static String				RUBBER_TREE_SAPLING_NAME		= "Rubber Tree Sapling";
+																		
+	public static String[]				ORE_TYPES						= new String[] { COPPER_ORE_NAME, TIN_ORE_NAME, SILVER_ORE_NAME, LEAD_ORE_NAME };
+																		
+	public static String[]				ELECTRIC_WIRE_TYPES				= new String[] { COPPER_WIRE_NAME };
+																		
+	public static String[]				TREE_LOG_TYPES					= new String[] { RUBBER_TREE_LOG_NAME };
+	public static String[]				TREE_LEAVES_TYPES				= new String[] { RUBBER_TREE_LEAVES_NAME };
+	public static String[]				TREE_SAPLING_TYPES				= new String[] { RUBBER_TREE_SAPLING_NAME };
+																		
+	public static Map<String, String>	BLOCK_UNLOCALIZED_NAMES			= new HashMap<String, String>();
+																		
+	public static Map<String, String>	BLOCK_REGISTRY_NAMES			= new HashMap<String, String>();
+																		
 	public static String addBlockUnlocalizedName(String name) {
 		String formatted = getFormattedName(BLOCK_PREFIX, name);
 		BLOCK_UNLOCALIZED_NAMES.put(name, formatted);

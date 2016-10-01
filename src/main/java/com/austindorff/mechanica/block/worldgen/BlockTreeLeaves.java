@@ -6,7 +6,9 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.austindorff.mechanica.Mechanica;
+import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockBase;
+import com.austindorff.mechanica.block.MechanicaBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -184,7 +186,7 @@ public class BlockTreeLeaves extends BlockBase implements net.minecraftforge.com
 	 */
 	@Nullable
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(Blocks.SAPLING);
+		return Item.getItemFromBlock(MechanicaBlocks.BLOCKS.get(Reference.RUBBER_TREE_SAPLING_NAME));
 	}
 
 	/**
