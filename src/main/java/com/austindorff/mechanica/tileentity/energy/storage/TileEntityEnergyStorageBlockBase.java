@@ -19,6 +19,10 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 		this.storageLimit = storageLimit;
 		this.storedEnergy = 0;
 	}
+	
+	public int getEnergyStored() {
+		return this.storedEnergy;
+	}
 
 	@Override
 	public boolean isCorrectTileEntity(TileEntity tile) {

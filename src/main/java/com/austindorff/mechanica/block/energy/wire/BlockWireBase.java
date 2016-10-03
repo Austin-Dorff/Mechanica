@@ -1,4 +1,4 @@
-package com.austindorff.mechanica.block.wire;
+package com.austindorff.mechanica.block.energy.wire;
 
 import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockContainerBase;
@@ -127,12 +127,12 @@ public class BlockWireBase extends BlockContainerBase {
 	public IBlockState getActualState(IBlockState blockState, IBlockAccess blockAccess, BlockPos coords) {
 		IBlockState state = this.getDefaultState();
 		TileEntityWire tile = ((TileEntityWire) blockAccess.getTileEntity(coords));
-		state = state.withProperty(this.UP, tile.isNeighborUp());
-		state = state.withProperty(this.DOWN, tile.isNeighborDown());
-		state = state.withProperty(this.NORTH, tile.isNeighborNorth());
-		state = state.withProperty(this.EAST, tile.isNeighborEast());
-		state = state.withProperty(this.SOUTH, tile.isNeighborSouth());
-		state = state.withProperty(this.WEST, tile.isNeighborWest());
+		state = state.withProperty(this.UP, tile.isConnectableNeighborUp());
+		state = state.withProperty(this.DOWN, tile.isConnectableNeighborDown());
+		state = state.withProperty(this.NORTH, tile.isConnectableNeighborNorth());
+		state = state.withProperty(this.EAST, tile.isConnectableNeighborEast());
+		state = state.withProperty(this.SOUTH, tile.isConnectableNeighborSouth());
+		state = state.withProperty(this.WEST, tile.isConnectableNeighborWest());
 		return state;
 	}
 	

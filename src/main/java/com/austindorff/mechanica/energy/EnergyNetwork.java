@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
+import com.austindorff.mechanica.tileentity.energy.storage.batterybox.TileEntityBatteryBox;
 
 public class EnergyNetwork {
 	
@@ -40,8 +41,8 @@ public class EnergyNetwork {
 	
 	public void injectPacket(PacketEnergy packet) {
 		for (TileEntityEnergyBlockBase tile : getNetworkTileEntities()) {
-			if (tile instanceof TileEntityEnergyBlockBase) {
-				tile = ((TileEntityEnergyBlockBase) tile);
+			if (tile instanceof TileEntityBatteryBox) {
+				tile = ((TileEntityBatteryBox) tile);
 				if (tile.canAcceptEnergyPacket(packet)) {
 					tile.recieveEnergyPacket(packet);
 				}

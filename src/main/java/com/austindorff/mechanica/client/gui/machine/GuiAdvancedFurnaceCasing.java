@@ -1,4 +1,4 @@
-package com.austindorff.mechanica.client.gui;
+package com.austindorff.mechanica.client.gui.machine;
 
 import java.io.IOException;
 

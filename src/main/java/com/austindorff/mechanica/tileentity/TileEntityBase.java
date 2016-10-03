@@ -55,6 +55,10 @@ public abstract class TileEntityBase extends TileEntity {
 		return getNeighborDown() != null && isCorrectTileEntity(getNeighborDown());
 	}
 	
+	public TileEntity[] getAllNeighbors() {		
+		return new TileEntity[] {getNeighborUp(), getNeighborDown(), getNeighborNorth(), getNeighborEast(), getNeighborSouth(), getNeighborWest() };
+	}
+	
 	public boolean isNeighborNorthEast() {
 		return worldObj.getTileEntity(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() - 1)) != null && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() - 1)));
 	}

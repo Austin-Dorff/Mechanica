@@ -1,14 +1,14 @@
 package com.austindorff.mechanica.tileentity.energy.wire;
 
-import com.austindorff.mechanica.block.wire.BlockWireBase;
-import com.austindorff.mechanica.block.wire.BlockWireBase.EnumWireType;
+import com.austindorff.mechanica.block.energy.wire.BlockWireBase;
+import com.austindorff.mechanica.block.energy.wire.BlockWireBase.EnumWireType;
 import com.austindorff.mechanica.energy.EnumResistance;
 import com.austindorff.mechanica.energy.EnumVoltage;
 import com.austindorff.mechanica.energy.IEnergySupplier;
 import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
-import com.austindorff.mechanica.tileentity.connectable.TileEntityConnectable;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -34,8 +34,10 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	@Override
 	public void updateBlockState(BlockPos coords) {
 		IBlockState state = this.worldObj.getBlockState(coords);
-		BlockWireBase block = ((BlockWireBase) state.getBlock());
-		this.worldObj.notifyBlockUpdate(coords, state, block.getActualState(state, this.worldObj, coords), 3);
+		Block block = state.getBlock();
+		if (block instanceof BlockWireBase) {
+			this.worldObj.notifyBlockUpdate(coords, state, ((BlockWireBase) block).getActualState(state, this.worldObj, coords), 3);
+		}
 	}
 	
 	@Override
@@ -129,7 +131,7 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 
 	@Override
 	public boolean canAcceptEnergyPacket(PacketEnergy packet) {
-		return true;
+		return false;
 	}
 
 	@Override

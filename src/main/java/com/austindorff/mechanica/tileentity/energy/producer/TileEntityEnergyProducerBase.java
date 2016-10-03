@@ -1,4 +1,4 @@
-package com.austindorff.mechanica.tileentity.energy.creator;
+package com.austindorff.mechanica.tileentity.energy.producer;
 
 import com.austindorff.mechanica.energy.EnumResistance;
 import com.austindorff.mechanica.energy.EnumVoltage;
@@ -6,6 +6,7 @@ import com.austindorff.mechanica.energy.IEnergyProducer;
 import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -66,6 +67,14 @@ public abstract class TileEntityEnergyProducerBase extends TileEntityEnergyBlock
 	@Override
 	public void recieveEnergyPacket(PacketEnergy packet) {
 		
+	}
+	
+	public boolean canInjectEnergyPacketIntoNetwork() {
+		return this.getEnergyNetwork().canAcceptPacket(getEnergyPacket());
+	}
+	
+	public PacketEnergy getEnergyPacket() {
+		return new PacketEnergy(this, this.getVoltageProducedEnum().getVoltage(), this.getResistanceEnum().getResistance(), this.pos, true);
 	}
 
 }

@@ -3,6 +3,9 @@ package com.austindorff.mechanica.tileentity.energy;
 import com.austindorff.mechanica.energy.EnergyNetwork;
 import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
 import com.austindorff.mechanica.tileentity.connectable.TileEntityConnectable;
+import com.austindorff.mechanica.tileentity.energy.producer.coalgenerator.TileEntityCoalGenerator;
+import com.austindorff.mechanica.tileentity.energy.storage.batterybox.TileEntityBatteryBox;
+import com.austindorff.mechanica.tileentity.energy.wire.TileEntityWire;
 
 import net.minecraft.tileentity.TileEntity;
 
@@ -16,14 +19,37 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable {
 	
 	@Override
 	public void updateConnections() {
-		super.updateConnections();
+		if (isConnectableNeighborUp()) {
+			updateBlockState(getNeighborUp().getPos());
+		}
+		if (isConnectableNeighborDown()) {
+			updateBlockState(getNeighborDown().getPos());
+		}
+		if (isConnectableNeighborNorth()) {
+			updateBlockState(getNeighborNorth().getPos());
+		}
+		if (isConnectableNeighborEast()) {
+			updateBlockState(getNeighborEast().getPos());
+		}
+		if (isConnectableNeighborSouth()) {
+			updateBlockState(getNeighborSouth().getPos());
+		}
+		if (isConnectableNeighborWest()) {
+			updateBlockState(getNeighborWest().getPos());
+		}
 		if (hasNeighborOnNetwork() != null) {
-			setEnergyNetwork(hasNeighborOnNetwork().getEnergyNetwork());
+			EnergyNetwork net = hasNeighborOnNetwork().getEnergyNetwork();
+			setEnergyNetwork(net);
+			for (TileEntity tile : getAllNeighbors()) {
+				if (tile != null && tile instanceof TileEntityEnergyBlockBase && tile != hasNeighborOnNetwork()) {
+					((TileEntityEnergyBlockBase) tile).setEnergyNetwork(net);
+				}
+			}
 		} else {
 			setEnergyNetwork(new EnergyNetwork(this));
 		}
 	}
-	
+
 	private TileEntityEnergyBlockBase hasNeighborOnNetwork() {
 		int networkSize = 0;
 		TileEntityEnergyBlockBase tile = null;
@@ -59,6 +85,30 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable {
 			}
 		}
 		return tile;
+	}
+	
+	public boolean isConnectableNeighborNorth() {
+		return getNeighborNorth() != null && getNeighborNorth() instanceof TileEntityEnergyBlockBase;
+	}
+	
+	public boolean isConnectableNeighborEast() {
+		return getNeighborEast() != null && getNeighborEast() instanceof TileEntityEnergyBlockBase;
+	}
+	
+	public boolean isConnectableNeighborSouth() {
+		return getNeighborSouth() != null && getNeighborSouth() instanceof TileEntityEnergyBlockBase;
+	}
+	
+	public boolean isConnectableNeighborWest() {
+		return getNeighborWest() != null && getNeighborWest() instanceof TileEntityEnergyBlockBase;
+	}
+	
+	public boolean isConnectableNeighborUp() {
+		return getNeighborUp() != null && getNeighborUp() instanceof TileEntityEnergyBlockBase;
+	}
+	
+	public boolean isConnectableNeighborDown() {
+		return getNeighborDown() != null && getNeighborDown() instanceof TileEntityEnergyBlockBase;
 	}
 	
 	public void setEnergyNetwork(EnergyNetwork network) {
