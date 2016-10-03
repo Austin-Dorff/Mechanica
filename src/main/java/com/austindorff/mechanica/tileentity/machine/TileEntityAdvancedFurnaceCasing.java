@@ -1,8 +1,7 @@
 package com.austindorff.mechanica.tileentity.machine;
 
-import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.MechanicaBlocks;
-import com.austindorff.mechanica.block.machine.AdvancedFurnaceCasing;
+import com.austindorff.mechanica.block.machine.BlockAdvancedFurnaceCasing;
 import com.austindorff.mechanica.tileentity.TileMultiblockBase;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IInventory {
+public class TileEntityAdvancedFurnaceCasing extends TileMultiblockBase implements IInventory {
 	
 	private ItemStack[]	inventory;
 	private boolean		isActive;
@@ -32,13 +31,9 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	private String		modeString;
 	private int			mode;
 						
-	public TileAdvancedFurnaceCasing() {
+	public TileEntityAdvancedFurnaceCasing() {
 		this.inventory = new ItemStack[this.getSizeInventory()];
 		reset();
-	}
-	
-	public TileAdvancedFurnaceCasing(NBTTagCompound tag) {
-		this.readFromNBT(tag);
 	}
 	
 	@Override
@@ -78,7 +73,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 	}
 	
 	public boolean isCorrectTileEntity(TileEntity tile) {
-		return tile instanceof TileAdvancedFurnaceCasing;
+		return tile instanceof TileEntityAdvancedFurnaceCasing;
 	}
 	
 	public boolean checkMultiBlockForm() {
@@ -110,9 +105,9 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 				for (int z = getMasterZ() - 1; z < getMasterZ() + 2; z++) {
 					BlockPos pos = new BlockPos(x, y, z);
 					TileEntity tile = worldObj.getTileEntity(pos);
-					if (tile != null && (tile instanceof TileAdvancedFurnaceCasing)) {
+					if (tile != null && (tile instanceof TileEntityAdvancedFurnaceCasing)) {
 						if (((x == getMasterX() && z != getMasterZ()) || (z == getMasterZ() && x != getMasterX())) && (y == getMasterY())) {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, this.isActive), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(BlockAdvancedFurnaceCasing.NAME).getDefaultState().withProperty(BlockAdvancedFurnaceCasing.LOCATION, BlockAdvancedFurnaceCasing.EnumType.FURNACE).withProperty(BlockAdvancedFurnaceCasing.IS_ACTIVE, this.isActive), 3);
 						}
 					}
 				}
@@ -151,25 +146,25 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 		if (level != -3) {
 			coords[1] = this.pos.getY() + level;
 			int counter = 0;
-			TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(pos.getX(), coords[1], pos.getZ())));
+			TileEntityAdvancedFurnaceCasing tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(pos.getX(), coords[1], pos.getZ())));
 			while (counter < 3 && tile != null && !isMiddle(tile)) {
 				counter++;
 				if (tile.isNeighborNorth() && tile.isNeighborEast() && !tile.isNeighborSouth() && tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX(), tile.pos.getY(), tile.pos.getZ() - 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX(), tile.pos.getY(), tile.pos.getZ() - 1)));
 				} else if (tile.isNeighborNorth() && !tile.isNeighborEast() && !tile.isNeighborSouth() && tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ() - 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ() - 1)));
 				} else if (tile.isNeighborNorth() && tile.isNeighborEast() && !tile.isNeighborSouth() && !tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ() - 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ() - 1)));
 				} else if (!tile.isNeighborNorth() && tile.isNeighborEast() && tile.isNeighborSouth() && tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX(), tile.pos.getY(), tile.pos.getZ() + 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX(), tile.pos.getY(), tile.pos.getZ() + 1)));
 				} else if (!tile.isNeighborNorth() && !tile.isNeighborEast() && tile.isNeighborSouth() && tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ() + 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ() + 1)));
 				} else if (!tile.isNeighborNorth() && tile.isNeighborEast() && tile.isNeighborSouth() && !tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ() + 1)));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ() + 1)));
 				} else if (tile.isNeighborNorth() && tile.isNeighborSouth() && !tile.isNeighborEast() && tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ())));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() - 1, tile.pos.getY(), tile.pos.getZ())));
 				} else if (tile.isNeighborNorth() && tile.isNeighborSouth() && tile.isNeighborEast() && !tile.isNeighborWest()) {
-					tile = ((TileAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ())));
+					tile = ((TileEntityAdvancedFurnaceCasing) this.worldObj.getTileEntity(new BlockPos(tile.pos.getX() + 1, tile.pos.getY(), tile.pos.getZ())));
 				}
 			}
 			if (tile != null && isMiddle(tile)) {
@@ -180,7 +175,7 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 		return new BlockPos(coords[0], coords[1], coords[2]);
 	}
 	
-	public boolean isMiddle(TileAdvancedFurnaceCasing tile) {
+	public boolean isMiddle(TileEntityAdvancedFurnaceCasing tile) {
 		if (tile.isNeighborNorth() && tile.isNeighborEast() && tile.isNeighborSouth() && tile.isNeighborWest() && tile.isNeighborNorthEast() && tile.isNeighborNorthWest() && tile.isNeighborSouthEast() && tile.isNeighborSouthWest()) {
 			return true;
 		}
@@ -195,13 +190,13 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					TileEntity tile = worldObj.getTileEntity(pos);
 					boolean master = (x == xPos && y == yPos && z == zPos);
 					if (tile != null && isCorrectTileEntity(tile)) {
-						((TileAdvancedFurnaceCasing) tile).setMasterCoords(xPos, yPos, zPos);
-						((TileAdvancedFurnaceCasing) tile).setHasMaster(true);
-						((TileAdvancedFurnaceCasing) tile).setIsMaster(master);
+						((TileEntityAdvancedFurnaceCasing) tile).setMasterCoords(xPos, yPos, zPos);
+						((TileEntityAdvancedFurnaceCasing) tile).setHasMaster(true);
+						((TileEntityAdvancedFurnaceCasing) tile).setIsMaster(master);
 						if (((x == xPos && z != zPos) || (z == zPos && x != xPos)) && (y == yPos)) {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.FURNACE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(BlockAdvancedFurnaceCasing.NAME).getDefaultState().withProperty(BlockAdvancedFurnaceCasing.LOCATION, BlockAdvancedFurnaceCasing.EnumType.FURNACE).withProperty(BlockAdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 						} else {
-							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.EDGE).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+							worldObj.setBlockState(pos, MechanicaBlocks.BLOCKS.get(BlockAdvancedFurnaceCasing.NAME).getDefaultState().withProperty(BlockAdvancedFurnaceCasing.LOCATION, BlockAdvancedFurnaceCasing.EnumType.EDGE).withProperty(BlockAdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 						}
 					}
 				}
@@ -216,8 +211,8 @@ public class TileAdvancedFurnaceCasing extends TileMultiblockBase implements IIn
 					BlockPos blockPos = new BlockPos(x, y, z);
 					TileEntity tile = worldObj.getTileEntity(blockPos);
 					if (tile != null && isCorrectTileEntity(tile)) {
-						((TileAdvancedFurnaceCasing) tile).reset();
-						worldObj.setBlockState(blockPos, MechanicaBlocks.BLOCKS.get(Reference.ADVANCED_FURNACE_CASING_NAME).getDefaultState().withProperty(AdvancedFurnaceCasing.LOCATION, AdvancedFurnaceCasing.EnumType.DEFAULT).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false), 3);
+						((TileEntityAdvancedFurnaceCasing) tile).reset();
+						worldObj.setBlockState(blockPos, MechanicaBlocks.BLOCKS.get(BlockAdvancedFurnaceCasing.NAME).getDefaultState().withProperty(BlockAdvancedFurnaceCasing.LOCATION, BlockAdvancedFurnaceCasing.EnumType.DEFAULT).withProperty(BlockAdvancedFurnaceCasing.IS_ACTIVE, false), 3);
 					}
 				}
 			}

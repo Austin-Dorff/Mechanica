@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.austindorff.mechanica.Reference;
-import com.austindorff.mechanica.block.machine.AdvancedFurnaceCasing;
+import com.austindorff.mechanica.block.machine.BlockAdvancedFurnaceCasing;
 import com.austindorff.mechanica.block.wire.BlockWireBase;
 import com.austindorff.mechanica.block.worldgen.BlockOre;
 import com.austindorff.mechanica.block.worldgen.BlockTreeLeaves;
@@ -43,26 +43,26 @@ public class MechanicaBlocks {
 	}
 	
 	private static void initSingletonBlockClasses() {
-		MechanicaBlocks.BLOCKS.put(Reference.ADVANCED_FURNACE_CASING_NAME, new AdvancedFurnaceCasing(Reference.ADVANCED_FURNACE_CASING_NAME));
-		MechanicaBlocks.BLOCKS.put(Reference.COPPER_WIRE_NAME, new BlockWireBase(Reference.COPPER_WIRE_NAME, Material.ROCK, 0.5F, 0.5F));
+		MechanicaBlocks.BLOCKS.put(BlockAdvancedFurnaceCasing.NAME, new BlockAdvancedFurnaceCasing());
+		MechanicaBlocks.BLOCKS.put(BlockWireBase.EnumWireType.COPPER.getUnlocalizedName(), new BlockWireBase(BlockWireBase.EnumWireType.COPPER.getRegistryName(), BlockWireBase.EnumWireType.COPPER.getUnlocalizedName(), Material.ROCK, 0.5F, 0.5F));
 	}
 
 	private static void initSubBlockClasses() {
 		// Ores
-		for (String oreName : Reference.ORE_TYPES) {
-			MechanicaBlocks.BLOCKS.put(oreName, new BlockOre(oreName));
+		for (BlockOre.EnumOreType oreType : BlockOre.EnumOreType.values()) {
+			MechanicaBlocks.BLOCKS.put(oreType.getUnlocalizedName(), new BlockOre(oreType));
 		}
 		// Tree Logs
-		for (String treeLogName : Reference.TREE_LOG_TYPES) {
-			MechanicaBlocks.BLOCKS.put(treeLogName, new BlockTreeLog(treeLogName));
+		for (BlockTreeLog.EnumLogType logType : BlockTreeLog.EnumLogType.values()) {
+			MechanicaBlocks.BLOCKS.put(logType.getUnlocalizedName(), new BlockTreeLog(logType));
 		}
 		// Tree Leaves
-		for (String treeLeafName : Reference.TREE_LEAVES_TYPES) {
-			MechanicaBlocks.BLOCKS.put(treeLeafName, new BlockTreeLeaves(treeLeafName));
+		for (BlockTreeLeaves.EnumLeafType leafType : BlockTreeLeaves.EnumLeafType.values()) {
+			MechanicaBlocks.BLOCKS.put(leafType.getUnlocalizedName(), new BlockTreeLeaves(leafType));
 		}
 		// Tree Saplings
-		for (String treeSaplingName : Reference.TREE_SAPLING_TYPES) {
-			MechanicaBlocks.BLOCKS.put(treeSaplingName, new BlockTreeSapling(treeSaplingName));
+		for (BlockTreeSapling.EnumSaplingType saplingType : BlockTreeSapling.EnumSaplingType.values()) {
+			MechanicaBlocks.BLOCKS.put(saplingType.getUnlocalizedName(), new BlockTreeSapling(saplingType));
 		}
 	}
 	

@@ -6,9 +6,9 @@ import net.minecraft.item.Item;
 
 public class ItemBase extends Item {
 	
-	public ItemBase(String name) {
+	public ItemBase(String regName, String unlocName) {
 		this.setCreativeTab(Reference.TAB_MECHANICA);
-		this.setRegistryName(Reference.addItemRegistryName(name));
-		this.setUnlocalizedName(Reference.addItemUnlocalizedName(name));
+		this.setRegistryName(regName);
+		this.setUnlocalizedName(unlocName);
 	}
 }

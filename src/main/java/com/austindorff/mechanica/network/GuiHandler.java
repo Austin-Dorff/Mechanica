@@ -2,7 +2,7 @@ package com.austindorff.mechanica.network;
 
 import com.austindorff.mechanica.client.gui.GuiAdvancedFurnaceCasing;
 import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if (id == ADVANCED_FURNACE_CASING) {
-			return new ContainerAdvancedFurnaceCasing(player.inventory, ((TileAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z))));
+			return new ContainerAdvancedFurnaceCasing(player.inventory, ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z))));
 		}	
 		return null;
 	}
@@ -24,7 +24,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 	    if (id == ADVANCED_FURNACE_CASING) {
-	    	TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z)));
+	    	TileEntityAdvancedFurnaceCasing tile = ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z)));
 	        return new GuiAdvancedFurnaceCasing(player.inventory, tile, new ContainerAdvancedFurnaceCasing(player.inventory, tile)); 
 	    }
 	    return null;

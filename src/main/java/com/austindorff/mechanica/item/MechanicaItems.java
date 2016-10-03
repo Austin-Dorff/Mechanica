@@ -3,8 +3,6 @@ package com.austindorff.mechanica.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.austindorff.mechanica.Reference;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -38,8 +36,8 @@ public class MechanicaItems {
 
 	private static void initSubItemClasses() {
 		// Metal Ingots
-		for (String ingotName : Reference.INGOT_TYPES) {
-			MechanicaItems.ITEMS.put(ingotName, new ItemIngot(ingotName));
+		for (ItemIngot.EnumIngotType ingotType : ItemIngot.EnumIngotType.values()) {
+			MechanicaItems.ITEMS.put(ingotType.getName(), new ItemIngot(ingotType));
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.austindorff.mechanica.tileentity;
 
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -12,7 +12,7 @@ public class TileEntityDeclaration {
 	}
 
 	private static void registerTileEntities() {
-		GameRegistry.registerTileEntity(TileAdvancedFurnaceCasing.class, "basic_machine_casing_multiblock");
+		GameRegistry.registerTileEntity(TileEntityAdvancedFurnaceCasing.class, "basic_machine_casing_multiblock");
 	}
 
 }

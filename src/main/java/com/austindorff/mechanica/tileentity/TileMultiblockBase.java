@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TileMultiblockBase extends TileEntity implements ITickable {
+public abstract class TileMultiblockBase extends TileEntityBase implements ITickable {
 	
 	private boolean	hasMaster, isMaster;
 	private int		masterX, masterY, masterZ;
@@ -25,58 +25,6 @@ public abstract class TileMultiblockBase extends TileEntity implements ITickable
 	
 	public boolean isMasterYCoordValid(BlockPos masterCoords) {
 		return masterCoords.getY() >= 0;
-	}
-	
-	public boolean isNeighborNorth() {
-		return (this.pos.getZ() >= (-1 * this.worldObj.getWorldBorder().getSize())) && isNeighborZ(-1);
-	}
-	
-	public boolean isNeighborSouth() {
-		return (this.pos.getZ() <= (this.worldObj.getWorldBorder().getSize())) && isNeighborZ(1);
-	}
-	
-	public boolean isNeighborEast() {
-		return (this.pos.getX() <= (this.worldObj.getWorldBorder().getSize())) && isNeighborX(1);
-	}
-	
-	public boolean isNeighborWest() {
-		return (this.pos.getX() >= (-1 * this.worldObj.getWorldBorder().getSize())) && isNeighborX(-1);
-	}
-	
-	public boolean isNeighborUp() {
-		return (this.pos.getY() <= this.worldObj.getHeight()) && isNeighborY(1);
-	}
-	
-	public boolean isNeighborDown() {
-		return (this.pos.getY() - 1 >= 0) && isNeighborY(-1);
-	}
-	
-	public boolean isNeighborNorthEast() {
-		return isNeighborEast() && isNeighborNorth() && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() - 1)));
-	}
-	
-	public boolean isNeighborNorthWest() {
-		return isNeighborEast() && isNeighborNorth() && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() - 1)));
-	}
-	
-	public boolean isNeighborSouthEast() {
-		return isNeighborEast() && isNeighborNorth() && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() + 1)));
-	}
-	
-	public boolean isNeighborSouthWest() {
-		return isNeighborEast() && isNeighborNorth() && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() + 1)));
-	}
-	
-	public boolean isNeighborX(int direction) {
-		return (this.pos.getX() + direction <= (this.worldObj.getWorldBorder().getSize())) && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX() + direction, pos.getY(), pos.getZ())));
-	}
-	
-	public boolean isNeighborY(int direction) {
-		return (pos.getY() + direction >= 0) && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX(), pos.getY() + direction, pos.getZ())));
-	}
-	
-	public boolean isNeighborZ(int direction) {
-		return (this.pos.getZ() + direction <= (this.worldObj.getWorldBorder().getSize())) && isCorrectTileEntity(worldObj.getTileEntity(new BlockPos(pos.getX(), pos.getY(), pos.getZ() + direction)));
 	}
 	
 	public void reset() {

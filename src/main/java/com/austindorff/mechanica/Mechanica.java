@@ -3,8 +3,6 @@ package com.austindorff.mechanica;
 import com.austindorff.mechanica.block.MechanicaBlocks;
 import com.austindorff.mechanica.item.MechanicaItems;
 import com.austindorff.mechanica.network.GuiHandler;
-import com.austindorff.mechanica.network.packet.PacketHandler;
-import com.austindorff.mechanica.network.packet.block.machine.PacketAdvancedFurnace;
 import com.austindorff.mechanica.network.proxy.CommonProxy;
 import com.austindorff.mechanica.tileentity.TileEntityDeclaration;
 import com.austindorff.mechanica.world.gen.MechanicaWorldGen;
@@ -18,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = Reference.MOD_ID, version = Reference.MOD_VERSION, name = Reference.MOD_NAME)
 
@@ -35,7 +32,6 @@ public class Mechanica
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-    	Reference.init();
     	MechanicaBlocks.init();
     	MechanicaItems.init();
     	TileEntityDeclaration.init();

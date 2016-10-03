@@ -1,5 +1,6 @@
 package com.austindorff.mechanica.block.worldgen;
 
+import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockBase;
 
 import net.minecraft.block.Block;
@@ -18,12 +19,35 @@ import net.minecraft.world.World;
 
 public class BlockTreeLog extends BlockBase {
 	
-	public static final PropertyEnum<EnumFacing.Axis>	AXIS			= PropertyEnum.<EnumFacing.Axis> create("axis", EnumFacing.Axis.class);
-																		
-	public BlockTreeLog(String name) {
-		super(name, Material.WOOD, 2.0F, 0.5F);
+	public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.<EnumFacing.Axis> create("axis", EnumFacing.Axis.class);
+	
+	public BlockTreeLog(EnumLogType logType) {
+		super(logType.getRegistryName(), logType.getUnlocalizedName(), logType.material, logType.hardness, logType.resistance);
 		this.setSoundType(SoundType.WOOD);
 		this.setDefaultState(this.getDefaultState().withProperty(AXIS, EnumFacing.Axis.Y));
+	}
+	
+	public enum EnumLogType {
+		
+		RUBBER("Rubber");
+		
+		private String	name;
+						
+		public float	hardness	= 6.0F;
+		public float	resistance	= 2.0F;
+		public Material	material	= Material.WOOD;
+									
+		private EnumLogType(String name) {
+			this.name = name;
+		}
+		
+		public String getRegistryName() {
+			return Reference.MOD_ID + ":" + this.getUnlocalizedName();
+		}
+		
+		public String getUnlocalizedName() {
+			return "block" + this.name + "Log";
+		}
 	}
 	
 	@Override
@@ -44,9 +68,6 @@ public class BlockTreeLog extends BlockBase {
 		return this.getDefaultState().withProperty(AXIS, enumfacing$axis);
 	}
 	
-	/**
-	 * Convert the BlockState into the correct metadata value
-	 */
 	public int getMetaFromState(IBlockState state) {
 		int i = 0;
 		EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis) state.getValue(AXIS);

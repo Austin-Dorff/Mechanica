@@ -9,10 +9,10 @@ import net.minecraft.util.EnumBlockRenderType;
 
 public abstract class BlockBase extends Block {
 
-	public BlockBase(String name, Material material, float hardness, float resistance) {
+	public BlockBase(String regName, String unlocName, Material material, float hardness, float resistance) {
 		super(material);
-		this.setUnlocalizedName(Reference.addBlockUnlocalizedName(name));
-		this.setRegistryName(Reference.addBlockRegistryName(name));
+		this.setUnlocalizedName(unlocName);
+		this.setRegistryName(regName);
         this.setCreativeTab(Reference.TAB_MECHANICA);
         this.setHardness(hardness);
         this.setResistance(resistance);

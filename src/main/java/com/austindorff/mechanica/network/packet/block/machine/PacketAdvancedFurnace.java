@@ -2,7 +2,7 @@ package com.austindorff.mechanica.network.packet.block.machine;
 
 import javax.annotation.Nullable;
 
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -36,13 +36,12 @@ public class PacketAdvancedFurnace implements IMessage {
 		buf.writeInt(this.pos.getZ());
 	}
 	
-	public World getWorld(MessageContext ctx)
-	{
+	public World getWorld(MessageContext ctx) {
 		return ctx.getServerHandler().playerEntity.getEntityWorld();
 	}
 	
-	public TileAdvancedFurnaceCasing getTile(MessageContext ctx) {
-		return ((TileAdvancedFurnaceCasing) getWorld(ctx).getTileEntity(this.pos));
+	public TileEntityAdvancedFurnaceCasing getTile(MessageContext ctx) {
+		return ((TileEntityAdvancedFurnaceCasing) getWorld(ctx).getTileEntity(this.pos));
 	}
 	
 	public static class Handler implements IMessageHandler<PacketAdvancedFurnace, IMessage> {
@@ -53,7 +52,7 @@ public class PacketAdvancedFurnace implements IMessage {
 		}
 		
 		private void handle(PacketAdvancedFurnace message, MessageContext ctx) {
-			TileAdvancedFurnaceCasing tile = message.getTile(ctx);	
+			TileEntityAdvancedFurnaceCasing tile = message.getTile(ctx);	
 			tile.toggleMode();
 			tile.markDirty();
 		}

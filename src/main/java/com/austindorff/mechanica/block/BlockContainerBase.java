@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 
 public abstract class BlockContainerBase extends BlockContainer {
 	
-	public BlockContainerBase(String name, Material material, float hardness, float resistance) {
+	public BlockContainerBase(String regName, String unlocName, Material material, float hardness, float resistance) {
 		super(material);
-		this.setUnlocalizedName(Reference.addBlockUnlocalizedName(name));
-		this.setRegistryName(Reference.addBlockRegistryName(name));
+		this.setUnlocalizedName(unlocName);
+		this.setRegistryName(regName);
 		this.setCreativeTab(Reference.TAB_MECHANICA);
 		this.setHardness(hardness);
 		this.setResistance(resistance);

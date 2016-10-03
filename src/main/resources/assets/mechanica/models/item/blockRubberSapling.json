@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mechanica:blocks/RubberTreeSapling"
+        "layer0": "mechanica:blocks/RubberSapling"
     },
     "display": {
         "thirdperson": {

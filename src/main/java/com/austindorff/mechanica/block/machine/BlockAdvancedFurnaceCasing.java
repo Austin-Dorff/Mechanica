@@ -1,9 +1,10 @@
 package com.austindorff.mechanica.block.machine;
 
 import com.austindorff.mechanica.Mechanica;
+import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockContainerBase;
 import com.austindorff.mechanica.network.GuiHandler;
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -22,14 +23,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class AdvancedFurnaceCasing extends BlockContainerBase {
+public class BlockAdvancedFurnaceCasing extends BlockContainerBase {
 	
-	public static final IProperty<EnumType>	LOCATION	= PropertyEnum.create("location", AdvancedFurnaceCasing.EnumType.class);
+	public static final IProperty<EnumType>	LOCATION	= PropertyEnum.create("location", BlockAdvancedFurnaceCasing.EnumType.class);
 	public static final IProperty<Boolean>	IS_ACTIVE	= PropertyBool.create("is_active");
+	
+	public static String NAME = "blockAdvancedFurnaceCasing";
 														
-	public AdvancedFurnaceCasing(String name) {
-		super(name, Material.IRON, 0.9F, 0.5F);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(LOCATION, EnumType.DEFAULT).withProperty(AdvancedFurnaceCasing.IS_ACTIVE, false));
+	public BlockAdvancedFurnaceCasing() {
+		super(Reference.MOD_ID + ":" + BlockAdvancedFurnaceCasing.NAME, BlockAdvancedFurnaceCasing.NAME, Material.IRON, 0.9F, 0.5F);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(LOCATION, EnumType.DEFAULT).withProperty(BlockAdvancedFurnaceCasing.IS_ACTIVE, false));
 	}
 	
 	@Override
@@ -38,21 +41,21 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	}
 	
 	static final class SwitchEnumType {
-		static final int[] LOCATION_LOOKUP = new int[AdvancedFurnaceCasing.EnumType.values().length];
+		static final int[] LOCATION_LOOKUP = new int[BlockAdvancedFurnaceCasing.EnumType.values().length];
 		
 		static {
 			try {
-				LOCATION_LOOKUP[AdvancedFurnaceCasing.EnumType.DEFAULT.ordinal()] = 1;
+				LOCATION_LOOKUP[BlockAdvancedFurnaceCasing.EnumType.DEFAULT.ordinal()] = 1;
 			} catch (NoSuchFieldError var6) {
 				;
 			}
 			try {
-				LOCATION_LOOKUP[AdvancedFurnaceCasing.EnumType.EDGE.ordinal()] = 2;
+				LOCATION_LOOKUP[BlockAdvancedFurnaceCasing.EnumType.EDGE.ordinal()] = 2;
 			} catch (NoSuchFieldError var6) {
 				;
 			}
 			try {
-				LOCATION_LOOKUP[AdvancedFurnaceCasing.EnumType.FURNACE.ordinal()] = 3;
+				LOCATION_LOOKUP[BlockAdvancedFurnaceCasing.EnumType.FURNACE.ordinal()] = 3;
 			} catch (NoSuchFieldError var6) {
 				;
 			}
@@ -66,7 +69,7 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	
 	public static enum EnumType implements IStringSerializable {
 		DEFAULT(0, "default"), EDGE(1, "edge"), FURNACE(2, "furnace");
-		private static final AdvancedFurnaceCasing.EnumType[]	META_LOOKUP	= new AdvancedFurnaceCasing.EnumType[values().length];
+		private static final BlockAdvancedFurnaceCasing.EnumType[]	META_LOOKUP	= new BlockAdvancedFurnaceCasing.EnumType[values().length];
 		private final int										meta;
 		private final String									name;
 		private final String									unlocalizedName;
@@ -89,7 +92,7 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 			return this.name;
 		}
 		
-		public static AdvancedFurnaceCasing.EnumType byMetadata(int meta) {
+		public static BlockAdvancedFurnaceCasing.EnumType byMetadata(int meta) {
 			if (meta < 0 || meta >= META_LOOKUP.length) {
 				meta = 0;
 			}
@@ -106,11 +109,11 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 		}
 		
 		static {
-			AdvancedFurnaceCasing.EnumType[] var0 = values();
+			BlockAdvancedFurnaceCasing.EnumType[] var0 = values();
 			int var1 = var0.length;
 			
 			for (int var2 = 0; var2 < var1; ++var2) {
-				AdvancedFurnaceCasing.EnumType var3 = var0[var2];
+				BlockAdvancedFurnaceCasing.EnumType var3 = var0[var2];
 				META_LOOKUP[var3.getMetadata()] = var3;
 			}
 		}
@@ -127,11 +130,11 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	@Override
 	public void onNeighborChange(IBlockAccess blockAccess, BlockPos coords, BlockPos neighbor) {
 		super.onNeighborChange(blockAccess, coords, neighbor);
-		TileAdvancedFurnaceCasing tile = ((TileAdvancedFurnaceCasing) blockAccess.getTileEntity(coords));
+		TileEntityAdvancedFurnaceCasing tile = ((TileEntityAdvancedFurnaceCasing) blockAccess.getTileEntity(coords));
 		if (!tile.checkMultiBlockForm()) {
 			if (tile.hasMaster()) {	
 				BlockPos pos = new BlockPos(tile.getMasterX(), tile.getMasterY(), tile.getMasterZ());
-				TileAdvancedFurnaceCasing master = ((TileAdvancedFurnaceCasing) blockAccess.getTileEntity(pos));
+				TileEntityAdvancedFurnaceCasing master = ((TileEntityAdvancedFurnaceCasing) blockAccess.getTileEntity(pos));
 				master.unloadInventory();
 				master.resetStructure();
 			}
@@ -145,14 +148,14 @@ public class AdvancedFurnaceCasing extends BlockContainerBase {
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileAdvancedFurnaceCasing();
+		return new TileEntityAdvancedFurnaceCasing();
 	}
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos coords, IBlockState blockState, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		super.onBlockActivated(world, coords, blockState, player, hand, heldItem, side, hitX, hitY, hitZ);
-		if (!world.isRemote && ((TileAdvancedFurnaceCasing) world.getTileEntity(coords)).checkMultiBlockForm()) {
-			BlockPos masterPos = ((TileAdvancedFurnaceCasing) world.getTileEntity(coords)).getMasterCoords();
+		if (!world.isRemote && ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(coords)).checkMultiBlockForm()) {
+			BlockPos masterPos = ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(coords)).getMasterCoords();
 			player.openGui(Mechanica.instance, GuiHandler.ADVANCED_FURNACE_CASING, world, masterPos.getX(), masterPos.getY(), masterPos.getZ());
 			return true;
 		}

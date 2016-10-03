@@ -4,10 +4,15 @@
         "model": "mechanica:blockWireCore"
     },
     "variants": {
+        "wire_type": {
+            "copper": {
+
+            }
+        },
         "up": {
             "true": {
                 "submodel": {
-                    "up": { "model": "mechanica:blockWireConnection_North", "x": 90}
+                    "up": { "model": "mechanica:blockWireConnection_North", "x": 270}
                 }
             },
             "false": {
@@ -17,7 +22,7 @@
         "down": {
             "true": {
                 "submodel": {
-                    "down": { "model": "mechanica:blockWireConnection_North", "x": 270}
+                    "down": { "model": "mechanica:blockWireConnection_North", "x": 90}
                 }
             },
             "false": {

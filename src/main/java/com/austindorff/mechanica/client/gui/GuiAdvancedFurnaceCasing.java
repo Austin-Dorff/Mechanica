@@ -8,7 +8,7 @@ import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.client.gui.component.ModeButton;
 import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
 import com.austindorff.mechanica.network.packet.block.machine.PacketAdvancedFurnace;
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -22,11 +22,11 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 public class GuiAdvancedFurnaceCasing extends GuiContainer {
 	
 	private IInventory						playerInventory;
-	private TileAdvancedFurnaceCasing		tile;
+	private TileEntityAdvancedFurnaceCasing		tile;
 	private ContainerAdvancedFurnaceCasing	container;
 	private ModeButton						modeButton;
 											
-	public GuiAdvancedFurnaceCasing(IInventory playerInventory, TileAdvancedFurnaceCasing tile, ContainerAdvancedFurnaceCasing container) {
+	public GuiAdvancedFurnaceCasing(IInventory playerInventory, TileEntityAdvancedFurnaceCasing tile, ContainerAdvancedFurnaceCasing container) {
 		super(container);
 		this.container = container;
 		this.playerInventory = playerInventory;

@@ -2,7 +2,7 @@ package com.austindorff.mechanica.container.machine;
 
 import javax.annotation.Nullable;
 
-import com.austindorff.mechanica.tileentity.machine.TileAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,13 +17,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerAdvancedFurnaceCasing extends Container {
 	
-	TileAdvancedFurnaceCasing	tile;
+	TileEntityAdvancedFurnaceCasing	tile;
 	private int					cookTime;
 	private int					totalCookTime;
 	private int					fuelLevel;
 	private int					mode;
 								
-	public ContainerAdvancedFurnaceCasing(IInventory playerInv, TileAdvancedFurnaceCasing tile) {
+	public ContainerAdvancedFurnaceCasing(IInventory playerInv, TileEntityAdvancedFurnaceCasing tile) {
 		this.tile = tile;
 		this.addSlotToContainer(new Slot(tile, 0, 8, 17));
 		this.addSlotToContainer(new Slot(tile, 1, 8, 53));
