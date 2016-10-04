@@ -1,27 +1,17 @@
 package com.austindorff.mechanica.tileentity.energy.producer;
 
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
+import com.austindorff.mechanica.energy.ElectricPacket;
 import com.austindorff.mechanica.energy.IEnergyProducer;
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class TileEntityEnergyProducerBase extends TileEntityEnergyBlockBase implements IEnergyProducer {
 
 	@Override
-	public abstract EnumVoltage getVoltageProducedEnum();
-
-	@Override
-	public int getCurrentProduced() {
-		return this.getVoltageProducedEnum().getVoltage() / this.getResistanceEnum().getResistance();
-	}
-
-	@Override
-	public abstract EnumResistance getResistanceEnum();
+	public abstract float getMinecraftAmperesProduced();
 
 	@Override
 	public boolean canConnectToEnergyNetworkInDirection(EnumFacing facing) {
@@ -50,31 +40,52 @@ public abstract class TileEntityEnergyProducerBase extends TileEntityEnergyBlock
 
 	@Override
 	public boolean canFeedEnergyToNetworkInDirection(EnumFacing facing) {
-		return this.getEnergyNetwork().canAcceptPacket(new PacketEnergy(this, this.getVoltageProducedEnum().getVoltage(), this.getResistanceEnum().getResistance(), this.pos, false));
+		return this.getNetwork().canAcceptPacket(getElectricPacket());
 	}
 
 	@Override
 	public abstract boolean isCorrectTileEntity(TileEntity tile);
 
 	@Override
-	public boolean canAcceptEnergyPacket(PacketEnergy packet) {
+	public boolean canAcceptElectricPacket(ElectricPacket packet) {
 		return false;
 	}
 
 	@Override
-	public abstract void sendEnergyPacket(PacketEnergy packet);
+	public abstract void sendElectricPacket(ElectricPacket packet);
 
 	@Override
-	public void recieveEnergyPacket(PacketEnergy packet) {
+	public void recieveElectricPacket(ElectricPacket packet) {
 		
 	}
 	
 	public boolean canInjectEnergyPacketIntoNetwork() {
-		return this.getEnergyNetwork().canAcceptPacket(getEnergyPacket());
+		return this.getNetwork().canAcceptPacket(getElectricPacket());
 	}
 	
-	public PacketEnergy getEnergyPacket() {
-		return new PacketEnergy(this, this.getVoltageProducedEnum().getVoltage(), this.getResistanceEnum().getResistance(), this.pos, true);
+	public ElectricPacket getElectricPacket() {
+		return new ElectricPacket(this.getMinecraftAmperesProduced());
 	}
+	
+	@Override
+	public boolean doesTransferEnergy() {
+		return false;
+	}
+	
+	@Override
+	public boolean doesUseEnergy() {
+		return false;
+	}
+
+	@Override
+	public boolean doesProduceEnergy() {
+		return true;
+	}
+
+	@Override
+	public abstract void updateBlockState(BlockPos coords);
+
+	@Override
+	public abstract boolean doesStoreEnergy();
 
 }

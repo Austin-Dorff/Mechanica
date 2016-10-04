@@ -1,20 +1,24 @@
 package com.austindorff.mechanica.tileentity.energy;
 
+import java.util.List;
+
+import com.austindorff.mechanica.energy.ElectricPacket;
 import com.austindorff.mechanica.energy.EnergyNetwork;
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
+import com.austindorff.mechanica.energy.INetworkComponent;
 import com.austindorff.mechanica.tileentity.connectable.TileEntityConnectable;
-import com.austindorff.mechanica.tileentity.energy.producer.coalgenerator.TileEntityCoalGenerator;
-import com.austindorff.mechanica.tileentity.energy.storage.batterybox.TileEntityBatteryBox;
-import com.austindorff.mechanica.tileentity.energy.wire.TileEntityWire;
+import com.google.common.collect.Lists;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
-public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable {
+public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable implements INetworkComponent, ITickable {
 	
-	private EnergyNetwork network;
-	
+	private EnergyNetwork	network;
+	private boolean			hasBeenPlaced	= false;
+											
 	public TileEntityEnergyBlockBase() {
-		this.network = new EnergyNetwork(this);
 	}
 	
 	@Override
@@ -37,54 +41,6 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable {
 		if (isConnectableNeighborWest()) {
 			updateBlockState(getNeighborWest().getPos());
 		}
-		if (hasNeighborOnNetwork() != null) {
-			EnergyNetwork net = hasNeighborOnNetwork().getEnergyNetwork();
-			setEnergyNetwork(net);
-			for (TileEntity tile : getAllNeighbors()) {
-				if (tile != null && tile instanceof TileEntityEnergyBlockBase && tile != hasNeighborOnNetwork()) {
-					((TileEntityEnergyBlockBase) tile).setEnergyNetwork(net);
-				}
-			}
-		} else {
-			setEnergyNetwork(new EnergyNetwork(this));
-		}
-	}
-
-	private TileEntityEnergyBlockBase hasNeighborOnNetwork() {
-		int networkSize = 0;
-		TileEntityEnergyBlockBase tile = null;
-		if (isNeighborUp()) {
-			if (((TileEntityEnergyBlockBase) getNeighborUp()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborUp()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborUp());
-			}
-		} else if (isNeighborDown()) {
-			if (((TileEntityEnergyBlockBase) getNeighborDown()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborDown()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborDown());
-			}
-		} else if (isNeighborNorth()) {
-			if (((TileEntityEnergyBlockBase) getNeighborNorth()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborNorth()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborNorth());
-			}
-		} else if (isNeighborEast()) {
-			if (((TileEntityEnergyBlockBase) getNeighborEast()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborEast()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborEast());
-			}
-		} else if (isNeighborSouth()) {
-			if (((TileEntityEnergyBlockBase) getNeighborSouth()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborSouth()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborSouth());
-			}
-		} else if (isNeighborWest()) {
-			if (((TileEntityEnergyBlockBase) getNeighborWest()).getEnergyNetwork().getNetworkTileEntities().size() > networkSize) {
-				networkSize = ((TileEntityEnergyBlockBase) getNeighborWest()).getEnergyNetwork().getNetworkTileEntities().size();
-				tile = ((TileEntityEnergyBlockBase) getNeighborWest());
-			}
-		}
-		return tile;
 	}
 	
 	public boolean isConnectableNeighborNorth() {
@@ -111,26 +67,101 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable {
 		return getNeighborDown() != null && getNeighborDown() instanceof TileEntityEnergyBlockBase;
 	}
 	
-	public void setEnergyNetwork(EnergyNetwork network) {
-		this.network = network;
-		this.network.addTileEntityToNetwork(this);
+	@Override
+	public abstract boolean isCorrectTileEntity(TileEntity tile);
+	
+	public abstract boolean canAcceptElectricPacket(ElectricPacket packet);
+	
+	public boolean canSendElectricPacket(ElectricPacket packet) {
+		return this.network.canAcceptPacket(packet);
 	}
 	
-	public EnergyNetwork getEnergyNetwork() {
+	public abstract void sendElectricPacket(ElectricPacket packet);
+	
+	public abstract void recieveElectricPacket(ElectricPacket packet);
+	
+	@Override
+	public EnergyNetwork getNetwork() {
 		return this.network;
 	}
 	
 	@Override
-	public abstract boolean isCorrectTileEntity(TileEntity tile);
-	
-	public abstract boolean canAcceptEnergyPacket(PacketEnergy packet);
-	
-	public boolean canSendEnergyPacket(PacketEnergy packet) {
-		return this.network.canAcceptPacket(packet);
+	public void setNetwork(EnergyNetwork network) {
+		this.network = network;
 	}
 	
-	public abstract void sendEnergyPacket(PacketEnergy packet);
+	@Override
+	public abstract void updateBlockState(BlockPos coords);
 	
-	public abstract void recieveEnergyPacket(PacketEnergy packet);
+	@Override
+	public void update() {
+		if (!hasBeenPlaced) {
+			hasBeenPlaced = true;
+			init();
+		}
+	}
+	
+	private void init() {
+		EnergyNetwork.integrate(this, getNeighbors());
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		
+		EnergyNetwork graph = this.getNetwork();
+		if (graph != null) {
+			graph.remove(this);
+		}
+	}
+	
+	private List<INetworkComponent> getNeighbors() {
+		List<INetworkComponent> neighbors = Lists.newArrayList();
+		for (EnumFacing f : EnumFacing.VALUES) {
+			TileEntity otherTile = worldObj.getTileEntity(pos.offset(f));
+			if (!(otherTile instanceof TileEntityEnergyBlockBase)) {
+				continue;
+			}				
+			INetworkComponent otherComponent = ((TileEntityEnergyBlockBase) otherTile);
+			if (otherComponent.getNetwork() != null) {
+				neighbors.add(otherComponent);
+			}
+		}
+		return neighbors;
+	}
+	
+	public void updateNeighbors() {
+		EnergyNetwork graph = this.getNetwork();
+		if (graph != null) {
+			graph.addNeighors(this, getNeighbors());
+		}
+	}
+	
+	public void broadcastDirty() {
+		if (getNetwork() == null) {
+			return;
+		}			
+		for (INetworkComponent object : getNetwork().getComponents()) {
+			if (!(object instanceof TileEntityEnergyBlockBase)) {
+				continue;
+			}
+			TileEntityEnergyBlockBase proxy = (TileEntityEnergyBlockBase) object;
+			if (!proxy.isInvalid()) {
+				proxy.markDirty();
+			}
+		}
+	}
+
+	@Override
+	public abstract boolean doesTransferEnergy();
+
+	@Override
+	public abstract boolean doesUseEnergy();
+
+	@Override
+	public abstract boolean doesStoreEnergy();
+
+	@Override
+	public abstract boolean doesProduceEnergy();
 	
 }

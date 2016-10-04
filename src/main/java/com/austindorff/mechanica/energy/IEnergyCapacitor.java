@@ -1,11 +1,8 @@
 package com.austindorff.mechanica.energy;
 
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
-
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
-public interface IEnergyStorage {
+public interface IEnergyCapacitor {
 
 	boolean isFull();
 	
@@ -13,9 +10,9 @@ public interface IEnergyStorage {
 	
 	boolean isPartiallyFull();
 	
-	EnumVoltage getVoltageEnum();
+	boolean canAcceptMinecraftAmperes(float minecraftAmperes);
 	
-	EnumResistance getResistanceEnum();
+	float getMinecraftAmperesOutput();
 	
 	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
 	
@@ -23,5 +20,4 @@ public interface IEnergyStorage {
 	
 	boolean canRecieveEnergyFromNetworkInDirection(EnumFacing facing);
 	
-	int getEnergyOutput();
 }

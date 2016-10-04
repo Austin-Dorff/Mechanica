@@ -5,12 +5,8 @@ import net.minecraft.world.World;
 
 public interface IEnergyProducer {
 	
-	EnumVoltage getVoltageProducedEnum();
-	
-	int getCurrentProduced();
-	
-	EnumResistance getResistanceEnum();
-	
+	float getMinecraftAmperesProduced();
+		
 	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
 	
 	boolean canFeedEnergyToNetworkInDirection(EnumFacing facing);

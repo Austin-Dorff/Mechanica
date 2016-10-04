@@ -40,6 +40,7 @@ public class BlockCoalGenerator extends BlockContainerBase {
 	public boolean onBlockActivated(World world, BlockPos coords, IBlockState blockState, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		super.onBlockActivated(world, coords, blockState, player, hand, heldItem, side, hitX, hitY, hitZ);
 		if (!world.isRemote) {
+			System.out.println(((TileEntityCoalGenerator) world.getTileEntity(coords)).getField(2));
 			player.openGui(Mechanica.instance, GuiHandler.COAL_GENERATOR, world, coords.getX(), coords.getY(), coords.getZ());
 			return true;
 		}

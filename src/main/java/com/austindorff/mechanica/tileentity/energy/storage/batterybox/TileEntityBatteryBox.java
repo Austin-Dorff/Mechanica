@@ -1,7 +1,5 @@
 package com.austindorff.mechanica.tileentity.energy.storage.batterybox;
 
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
 import com.austindorff.mechanica.tileentity.energy.storage.TileEntityEnergyStorageBlockBase;
 
 import net.minecraft.util.math.BlockPos;
@@ -13,18 +11,17 @@ public class TileEntityBatteryBox extends TileEntityEnergyStorageBlockBase {
 	}
 
 	@Override
-	public EnumVoltage getVoltageEnum() {
-		return EnumVoltage.TIER_ONE;
-	}
-
-	@Override
-	public EnumResistance getResistanceEnum() {
-		return EnumResistance.TIER_TWO;
-	}
-
-	@Override
 	public void updateBlockState(BlockPos coords) {
 		
 	}
 
+	@Override
+	public boolean canAcceptMinecraftAmperes(float voltage) {
+		return voltage <= 32;
+	}
+
+	@Override
+	public float getMinecraftAmperesOutput() {
+		return 32;
+	}
 }

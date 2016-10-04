@@ -2,8 +2,6 @@ package com.austindorff.mechanica.block.energy.wire;
 
 import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockContainerBase;
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
 import com.austindorff.mechanica.tileentity.energy.wire.TileEntityWire;
 
 import net.minecraft.block.material.Material;
@@ -30,30 +28,28 @@ public class BlockWireBase extends BlockContainerBase {
 	public static final IProperty<Boolean>		SOUTH		= PropertyBool.create("south");
 	public static final IProperty<Boolean>		WEST		= PropertyBool.create("west");
 	public static final IProperty<EnumWireType>	WIRE_TYPE	= PropertyEnum.create("wire_type", BlockWireBase.EnumWireType.class);
-																											
+															
 	public BlockWireBase(String regName, String unlocName, Material material, float hardness, float resistance) {
 		super(regName, unlocName, material, hardness, resistance);
 		this.setDefaultState(getDefaultState().withProperty(WIRE_TYPE, EnumWireType.COPPER).withProperty(UP, false).withProperty(DOWN, false).withProperty(NORTH, false).withProperty(EAST, false).withProperty(SOUTH, false).withProperty(WEST, false));
 	}
 	
 	public enum EnumWireType implements IStringSerializable {
-		COPPER("copper", false, true, EnumVoltage.TIER_ONE, EnumVoltage.TIER_TWO, EnumResistance.TIER_ONE);
-		private EnumVoltage	minVoltage, maxVoltage;
-		private EnumResistance resistance;
-		private boolean		hasMinVoltage, hasMaxVoltage;
-		private String		name;
-							
-		private EnumWireType(String name, boolean hasMinVoltage, boolean hasMaxVoltage, EnumVoltage minVoltage, EnumVoltage maxVoltage, EnumResistance resistance) {
+		COPPER("copper", false, true, 0, 12);
+		private float	minMinecraftAmperes, maxMinecraftAmperes;
+		private boolean	hasMinMinecraftAmperes, hasMaxMinecraftAmperes;
+		private String	name;
+						
+		private EnumWireType(String name, boolean hasMinMinecraftAmperes, boolean hasMaxMinecraftAmperes, float minMinecraftAmperes, float maxMinecraftAmperes) {
 			this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
-			this.hasMaxVoltage = hasMaxVoltage;
-			this.hasMinVoltage = hasMinVoltage;
-			this.maxVoltage = maxVoltage;
-			this.minVoltage = minVoltage;
-			this.resistance = resistance;
+			this.hasMaxMinecraftAmperes = hasMaxMinecraftAmperes;
+			this.hasMinMinecraftAmperes = hasMinMinecraftAmperes;
+			this.maxMinecraftAmperes = maxMinecraftAmperes;
+			this.minMinecraftAmperes = minMinecraftAmperes;
 		}
 		
 		public static int wireTypeToMeta(EnumWireType enumType) {
-			switch(enumType) {
+			switch (enumType) {
 				case COPPER: {
 					return 0;
 				}
@@ -62,7 +58,7 @@ public class BlockWireBase extends BlockContainerBase {
 		}
 		
 		public static EnumWireType metaToWireType(int meta) {
-			switch(meta) {
+			switch (meta) {
 				case 0: {
 					return COPPER;
 				}
@@ -70,24 +66,20 @@ public class BlockWireBase extends BlockContainerBase {
 			return COPPER;
 		}
 		
-		public boolean hasMaxVoltage() {
-			return this.hasMaxVoltage;
+		public boolean hasMaxMinecraftAmperes() {
+			return this.hasMaxMinecraftAmperes;
 		}
 		
-		public boolean hasMinVoltage() {
-			return this.hasMaxVoltage;
+		public boolean hasMinMinecraftAmperes() {
+			return this.hasMinMinecraftAmperes;
 		}
 		
-		public EnumVoltage maxVoltage() {
-			return this.maxVoltage;
+		public float maxMinecraftAmperes() {
+			return this.maxMinecraftAmperes;
 		}
 		
-		public EnumVoltage minVoltage() {
-			return this.minVoltage;
-		}
-		
-		public EnumResistance resistance() {
-			return this.resistance;
+		public float minMinecraftAmperes() {
+			return this.minMinecraftAmperes;
 		}
 		
 		public String getRegistryName() {

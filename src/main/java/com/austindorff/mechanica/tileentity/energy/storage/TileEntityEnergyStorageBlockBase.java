@@ -1,26 +1,24 @@
 package com.austindorff.mechanica.tileentity.energy.storage;
 
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
-import com.austindorff.mechanica.energy.IEnergyStorage;
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
+import com.austindorff.mechanica.energy.ElectricPacket;
+import com.austindorff.mechanica.energy.IEnergyCapacitor;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
 
-public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyBlockBase implements IEnergyStorage {
+public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyBlockBase implements IEnergyCapacitor {
 	
-	private int storedEnergy;
-	private int storageLimit;
+	private float storedEnergy;
+	private float storageLimit;
 	
-	public TileEntityEnergyStorageBlockBase(int storageLimit) {
+	public TileEntityEnergyStorageBlockBase(float storageLimit) {
 		this.storageLimit = storageLimit;
 		this.storedEnergy = 0;
 	}
 	
-	public int getEnergyStored() {
+	public float getEnergyStored() {
 		return this.storedEnergy;
 	}
 
@@ -45,23 +43,23 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 	}
 
 	@Override
-	public boolean canAcceptEnergyPacket(PacketEnergy packet) {
-		return this.storedEnergy + packet.getEnergyValue() <= this.storageLimit;
+	public boolean canAcceptElectricPacket(ElectricPacket packet) {
+		return this.storedEnergy + packet.getMinecraftAmperes() <= this.storageLimit;
 	}
 
 	@Override
-	public boolean canSendEnergyPacket(PacketEnergy packet) {
-		return getEnergyNetwork().canAcceptPacket(packet);
+	public boolean canSendElectricPacket(ElectricPacket packet) {
+		return getNetwork().canAcceptPacket(packet);
 	}
 
 	@Override
-	public void sendEnergyPacket(PacketEnergy packet) {
-		this.getEnergyNetwork().injectPacket(packet);
+	public void sendElectricPacket(ElectricPacket packet) {
+		this.getNetwork().injectPacket(packet);
 	}
 
 	@Override
-	public void recieveEnergyPacket(PacketEnergy packet) {
-		this.storedEnergy += packet.getEnergyValue();
+	public void recieveElectricPacket(ElectricPacket packet) {
+		this.storedEnergy += packet.getMinecraftAmperes();
 	}
 
 	@Override
@@ -91,7 +89,7 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 
 	@Override
 	public boolean canFeedEnergyToNetworkInDirection(EnumFacing facing) {
-		return this.getEnergyNetwork().canAcceptPacket(new PacketEnergy(this, this.getVoltageEnum().getVoltage(), this.getResistanceEnum().getResistance(), this.pos, false));
+		return this.getNetwork().canAcceptPacket(new ElectricPacket(this.getMinecraftAmperesOutput()));
 	}
 
 	@Override
@@ -99,16 +97,33 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 		return false;
 	}
 
+	public abstract float getMinecraftAmperesOutput();
+
 	@Override
-	public int getEnergyOutput() {
-		return this.getVoltageEnum().getVoltage() / this.getResistanceEnum().getResistance();
+	public abstract boolean canAcceptMinecraftAmperes(float minecraftAmperes);
+
+	@Override
+	public abstract void updateBlockState(BlockPos coords);
+	
+	
+	@Override
+	public boolean doesTransferEnergy() {
+		return false;
 	}
 
 	@Override
-	public abstract EnumVoltage getVoltageEnum();
+	public boolean doesUseEnergy() {
+		return false;
+	}
 
 	@Override
-	public abstract EnumResistance getResistanceEnum();
-	
+	public boolean doesStoreEnergy() {
+		return true;
+	}
+
+	@Override
+	public boolean doesProduceEnergy() {
+		return false;
+	}
 
 }

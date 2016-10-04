@@ -3,17 +3,15 @@ package com.austindorff.mechanica.energy;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public interface IEnergySupplier {
+public interface IEnergyConductor {
+		
+	boolean hasMinMinecraftAmperes();
 	
-	boolean hasMinVoltage();
+	boolean hasMaxMinecraftAmperes();
 	
-	boolean hasMaxVoltage();
+	float getMinMinecraftAmperes();
 	
-	EnumVoltage getMinVoltageEnum();
-	
-	EnumVoltage getMaxVoltageEnum();
-	
-	EnumResistance getResistanceEnum();
+	float getMaxMinecraftAmperes();
 	
 	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
 	

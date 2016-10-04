@@ -1,14 +1,10 @@
 package com.austindorff.mechanica.tileentity.energy.producer;
 
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
+import com.austindorff.mechanica.energy.ElectricPacket;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -144,17 +140,18 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 	}
 
 	@Override
-	public abstract EnumVoltage getVoltageProducedEnum();
-
-	@Override
-	public abstract EnumResistance getResistanceEnum();
+	public abstract float getMinecraftAmperesProduced();
 
 	@Override
 	public abstract boolean isCorrectTileEntity(TileEntity tile);
 
 	@Override
-	public abstract void sendEnergyPacket(PacketEnergy packet);
+	public abstract void sendElectricPacket(ElectricPacket packet);
 
 	@Override
 	public abstract void updateBlockState(BlockPos coords);
+
+	@Override
+	public abstract boolean doesStoreEnergy();
+
 }

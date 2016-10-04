@@ -2,10 +2,8 @@ package com.austindorff.mechanica.tileentity.energy.wire;
 
 import com.austindorff.mechanica.block.energy.wire.BlockWireBase;
 import com.austindorff.mechanica.block.energy.wire.BlockWireBase.EnumWireType;
-import com.austindorff.mechanica.energy.EnumResistance;
-import com.austindorff.mechanica.energy.EnumVoltage;
-import com.austindorff.mechanica.energy.IEnergySupplier;
-import com.austindorff.mechanica.network.packet.energy.PacketEnergy;
+import com.austindorff.mechanica.energy.ElectricPacket;
+import com.austindorff.mechanica.energy.IEnergyConductor;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
 import net.minecraft.block.Block;
@@ -16,11 +14,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergySupplier {
+public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergyConductor {
 	
 	private boolean isPowered = false;
-	private EnumVoltage voltage;
-	private EnumResistance resistance;
+	private float minecraftAmperes;
 	
 	@Override
 	public boolean isCorrectTileEntity(TileEntity tile) {
@@ -41,58 +38,47 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	}
 	
 	@Override
-	public boolean hasMinVoltage() {
+	public boolean hasMinMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
-				return EnumWireType.COPPER.hasMinVoltage();
+				return EnumWireType.COPPER.hasMinMinecraftAmperes();
 			}
 		}
 		return false;
 	}
 	
 	@Override
-	public boolean hasMaxVoltage() {
+	public boolean hasMaxMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
-				return EnumWireType.COPPER.hasMaxVoltage();
+				return EnumWireType.COPPER.hasMaxMinecraftAmperes();
 			}
 		}
 		return false;
 	}
 	
 	@Override
-	public EnumVoltage getMinVoltageEnum() {
+	public float getMinMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
-				return EnumWireType.COPPER.minVoltage();
+				return EnumWireType.COPPER.minMinecraftAmperes();
 			}
 		}
-		return EnumVoltage.INVALID;
+		return 0;
 	}
 	
 	@Override
-	public EnumVoltage getMaxVoltageEnum() {
+	public float getMaxMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
-				return EnumWireType.COPPER.maxVoltage();
+				return EnumWireType.COPPER.maxMinecraftAmperes();
 			}
 		}
-		return EnumVoltage.INVALID;
-	}
-	
-	@Override
-	public EnumResistance getResistanceEnum() {
-		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
-		switch (property.getName()) {
-			case "Copper": {
-				return EnumWireType.COPPER.resistance();
-			}
-		}
-		return EnumResistance.INVALID;
+		return 0;
 	}
 	
 	@Override
@@ -130,25 +116,46 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	}
 
 	@Override
-	public boolean canAcceptEnergyPacket(PacketEnergy packet) {
-		return false;
+	public boolean canAcceptElectricPacket(ElectricPacket packet) {
+		return isPowered == false;
 	}
 
 	@Override
-	public boolean canSendEnergyPacket(PacketEnergy packet) {
+	public boolean canSendElectricPacket(ElectricPacket packet) {
 		return true;
 	}
 
 	@Override
-	public void sendEnergyPacket(PacketEnergy packet) {
-		this.getEnergyNetwork().injectPacket(packet);
+	public void sendElectricPacket(ElectricPacket packet) {
+		this.getNetwork().injectPacket(packet);
+		this.isPowered = false;
+		this.minecraftAmperes = 0;
 	}
 
 	@Override
-	public void recieveEnergyPacket(PacketEnergy packet) {
+	public void recieveElectricPacket(ElectricPacket packet) {
 		this.isPowered = true;
-		this.voltage = EnumVoltage.getEnumFromVoltage(packet.getVoltage());
-		this.resistance = EnumResistance.getEnumFromResistance(packet.getResistance());
+		this.minecraftAmperes = packet.getMinecraftAmperes();
+	}
+
+	@Override
+	public boolean doesTransferEnergy() {
+		return true;
+	}
+
+	@Override
+	public boolean doesUseEnergy() {
+		return false;
+	}
+
+	@Override
+	public boolean doesStoreEnergy() {
+		return false;
+	}
+
+	@Override
+	public boolean doesProduceEnergy() {
+		return false;
 	}
 	
 }

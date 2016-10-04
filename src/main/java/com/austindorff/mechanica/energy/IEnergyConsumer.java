@@ -5,19 +5,15 @@ import net.minecraft.world.World;
 
 public interface IEnergyConsumer {
 	
-	boolean hasMinVoltage();
+	boolean hasMinMinecraftAmperes();
 	
-	boolean hasMaxVoltage();
+	boolean hasMaxMinecraftAmperes();
 	
-	EnumVoltage getMinVoltage();
+	float getMinMinecraftAmperes();
 
-	EnumVoltage getMaxVoltage();
+	float getMaxMinecraftAmperes();
 	
-	EnumResistance getResistance();
-	
-	int getCurrentEnergyConsumption();
-	
-	EnumVoltage getCurrentVoltageRecieving();
+	float getCurrentMinecraftAmperesConsumption();
 	
 	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
 	
