@@ -5,6 +5,8 @@ import com.austindorff.mechanica.energy.ElectricPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -30,6 +32,10 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 	public boolean hasCustomName() {
 		return true;
 	}
+	
+	public void setInventory(ItemStack[] itemStacks) {
+		this.inventory = itemStacks;
+	}
 
 	@Override
 	public int getSizeInventory() {
@@ -41,6 +47,7 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 		if (index < 0 || index >= this.getSizeInventory()) {
 			return null;
 		}
+		this.markDirty();
 		return this.inventory[index];
 	}
 	
@@ -51,8 +58,6 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 			if (this.getStackInSlot(index).stackSize <= count) {
 				itemStack = this.getStackInSlot(index);
 				this.setInventorySlotContents(index, null);
-				this.markDirty();
-				return itemStack;
 			} else {
 				itemStack = this.getStackInSlot(index).splitStack(count);
 				
@@ -61,9 +66,9 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 				} else {
 					this.setInventorySlotContents(index, this.getStackInSlot(index));
 				}
-				this.markDirty();
-				return itemStack;
 			}
+			this.markDirty();
+			return itemStack;
 		}
 		return null;
 	}
@@ -137,10 +142,11 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 		for (int i = 0; i < this.inventory.length; ++i) {
 			this.inventory[i] = null;
 		}
+		this.markDirty();
 	}
 
 	@Override
-	public abstract float getMinecraftAmperesProduced();
+	public abstract int getMinecraftAmperesProducedPerTick();
 
 	@Override
 	public abstract boolean isCorrectTileEntity(TileEntity tile);
@@ -153,5 +159,39 @@ public abstract class TileEntityEnergyProducerBaseInventory extends TileEntityEn
 
 	@Override
 	public abstract boolean doesStoreEnergy();
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		NBTTagList nbttaglist = new NBTTagList();
+		System.out.println(this.getInventory().length);
+		for (int i = 0; i < this.getInventory().length; ++i) {
+			if (this.inventory[i] != null) {
+				NBTTagCompound nbttagcompound = new NBTTagCompound();
+				nbttagcompound.setByte("Slot", (byte) i);
+				this.inventory[i].writeToNBT(nbttagcompound);
+				nbttaglist.appendTag(nbttagcompound);
+			}
+		}
+		
+		compound.setTag("Items", nbttaglist);
+		return compound;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		NBTTagList nbttaglist = compound.getTagList("Items", 10);
+		
+		this.inventory = new ItemStack[1];
+		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound.getByte("Slot");
+			
+			if (j >= 0 && j < this.inventory.length) {
+				this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
+			}
+		}
+	}
 
 }

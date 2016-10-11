@@ -1,137 +1,187 @@
 package com.austindorff.mechanica.energy;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.austindorff.mechanica.tileentity.energy.storage.batterybox.TileEntityBatteryBox;
 
 public class EnergyNetwork {
 	
-	private Map<INetworkComponent, Boolean>			doesComponentTransferEnergy	= new HashMap<INetworkComponent, Boolean>();
-	private Map<INetworkComponent, Boolean>			doesComponentStoreEnergy	= new HashMap<INetworkComponent, Boolean>();
-	private Map<INetworkComponent, Boolean>			doesComponentProduceEnergy	= new HashMap<INetworkComponent, Boolean>();
-	private Map<INetworkComponent, Boolean>			doesComponentUseEnergy		= new HashMap<INetworkComponent, Boolean>();
-																				
-	private Map<INetworkComponent, EnergyNetNode>	networkComponentsToNodes	= new HashMap<INetworkComponent, EnergyNetNode>();
-	private Map<EnergyNetNode, INetworkComponent>	nodesToNetworkComponents	= new HashMap<EnergyNetNode, INetworkComponent>();
-	private Map<EnergyNetNode, EnergyNetNode>		networkNodeNeighbors		= new HashMap<EnergyNetNode, EnergyNetNode>();
-	private Map<EnergyNetNode, EnergyNetNode>		reverseNetworkNodeNeighbors	= new HashMap<EnergyNetNode, EnergyNetNode>();
-	private List<EnergyNetNode>						networkNodes				= new ArrayList<EnergyNetNode>();
-																				
+	private INetworkComponent						masterComponent;
+													
+	private ArrayList<NetworkNode>					networkNodes		= new ArrayList<NetworkNode>();
+	private ArrayList<INetworkComponent>			networkComponents	= new ArrayList<INetworkComponent>();
+																		
+	private HashMap<NetworkNode, INetworkComponent>	nodeToComponent		= new HashMap<NetworkNode, INetworkComponent>();
+	private HashMap<INetworkComponent, NetworkNode>	componentToNode		= new HashMap<INetworkComponent, NetworkNode>();
+																		
 	public EnergyNetwork() {
+	
 	}
 	
-	public static void integrate(INetworkComponent component, List<INetworkComponent> neighbors) {
-		EnergyNetwork otherNetwork = null;
+	public EnergyNetwork(INetworkComponent masterComponent) {
+		this.masterComponent = masterComponent;
+		addNodeToNetwork(masterComponent);
+	}
+	
+	public EnergyNetwork(HashMap<INetworkComponent, NetworkNode> componentToNode, HashMap<NetworkNode, INetworkComponent> nodeToComponent, INetworkComponent masterComponent) {
+		this.componentToNode = componentToNode;
+		this.nodeToComponent = nodeToComponent;
+		this.masterComponent = masterComponent;
+		for (INetworkComponent component : this.nodeToComponent.values()) {
+			component.setEnergyNetworkInDirection(this, EnumDirection.ALL);
+		}
+	}
+	
+	public static EnergyNetwork incorporateComponent(INetworkComponent newComponent) {
+		ArrayList<INetworkComponent> neighbors = newComponent.getNeighbors();
+		ArrayList<EnergyNetwork> neighboringEnergyNetworks = new ArrayList<EnergyNetwork>();
 		for (INetworkComponent neighbor : neighbors) {
-			if (neighbor.getNetwork() != null) {
-				otherNetwork = neighbor.getNetwork();
-				break;
+			if (neighbor != null) {
+				EnergyNetwork neighborNet = neighbor.getEnergyNetworkInDirection(EnumDirection.ALL);
+				if ((neighbor != null) && (neighbor instanceof IEnergyConductor) && (neighborNet != null)) {
+					if (!neighboringEnergyNetworks.contains(neighborNet)) {
+						neighboringEnergyNetworks.add(neighborNet);
+					}
+				}
 			}
 		}
-		if (otherNetwork != null) {
-			otherNetwork.add(component, neighbors);
+		EnergyNetwork newComponentNet = new EnergyNetwork(newComponent);
+		newComponent.setEnergyNetworkInDirection(newComponentNet, EnumDirection.ALL);
+		neighboringEnergyNetworks.add(new EnergyNetwork(newComponent));
+		if (neighboringEnergyNetworks.size() > 1) {
+			return mergeNetworks(neighboringEnergyNetworks);
+		}
+		return newComponentNet;
+	}
+	
+	public void removeComponent(INetworkComponent componentToRemove) {
+		NetworkNode nodeToRemove = this.componentToNode.get(componentToRemove);
+		if (nodeToRemove != null) {
+			this.nodeToComponent.remove(nodeToRemove, componentToRemove);
+			this.networkNodes.remove(nodeToRemove);
+			this.componentToNode.remove(componentToRemove, nodeToRemove);
+			this.networkComponents.remove(componentToRemove);
+			split(componentToRemove);
 		}
 	}
 	
-	public void add(INetworkComponent component, Iterable<INetworkComponent> neighbors) {
-		if (component.getNetwork() == null) {
-			component.setNetwork(this);
-			EnergyNetNode node = new EnergyNetNode(this, component);
-			this.networkComponentsToNodes.put(component, node);
-			this.nodesToNetworkComponents.put(node, component);
-			this.networkNodes.add(node);
-			this.doesComponentProduceEnergy.put(component, component.doesProduceEnergy());
-			this.doesComponentUseEnergy.put(component, component.doesUseEnergy());
-			this.doesComponentStoreEnergy.put(component, component.doesStoreEnergy());
-			this.doesComponentTransferEnergy.put(component, component.doesTransferEnergy());
-			addNeighors(component, neighbors);
+	private void split(INetworkComponent componentToRemove) {
+		for (INetworkComponent neighbor : componentToRemove.getNeighbors()) {
+			if (neighbor != null) {
+				neighbor.setEnergyNetworkInDirection(new EnergyNetwork(neighbor), EnumDirection.ALL);
+			}
 		}
+		EnergyNetwork.recreate(this);
 	}
 	
-	public void addNeighors(INetworkComponent component, Iterable<INetworkComponent> neighbors) {
-		EnergyNetNode node = this.networkComponentsToNodes.get(component);
-		for (INetworkComponent neighbor : neighbors) {
-			if (this != neighbor.getNetwork()) {
-				this.mergeWith(neighbor.getNetwork());
-				EnergyNetNode nodeNeighbor = this.networkComponentsToNodes.get(neighbor);
-				this.networkNodeNeighbors.put(node, nodeNeighbor);
-				this.reverseNetworkNodeNeighbors.put(nodeNeighbor, node);
+	private static void recreate(EnergyNetwork energyNetwork) {
+		ArrayList<INetworkComponent> alreadySeen = new ArrayList<INetworkComponent>();
+		for (INetworkComponent component : energyNetwork.nodeToComponent.values()) {
+			if (!alreadySeen.contains(component)) {
+				EnergyNetwork newNet = EnergyNetwork.incorporateComponent(component);
+				component.setEnergyNetworkInDirection(newNet, EnumDirection.ALL);
+				alreadySeen.add(component);
 			}
 		}
 	}
 	
-	public void removeNeighbor(INetworkComponent component, INetworkComponent neighbor) {
-	
+	private static EnergyNetwork mergeNetworks(ArrayList<EnergyNetwork> energyNets) {
+		HashMap<INetworkComponent, NetworkNode> componentToNodeNew = new HashMap<INetworkComponent, NetworkNode>();
+		HashMap<NetworkNode, INetworkComponent> nodeToComponentNew = new HashMap<NetworkNode, INetworkComponent>();
+		for (EnergyNetwork net : energyNets) {
+			componentToNodeNew.putAll(net.componentToNode);
+			nodeToComponentNew.putAll(net.nodeToComponent);
+		}
+		EnergyNetwork newNet = new EnergyNetwork(componentToNodeNew, nodeToComponentNew, energyNets.get(0).getMasterComponent());
+		for (INetworkComponent component : newNet.nodeToComponent.values()) {
+			component.setEnergyNetworkInDirection(newNet, EnumDirection.ALL);
+		}
+		return newNet;
 	}
 	
-	private void splitAfterRemoval() {
-		
+	public INetworkComponent getMasterComponent() {
+		return masterComponent;
 	}
 	
-	private void mergeWith(EnergyNetwork net) {
-		
+	public void setMasterComponent(INetworkComponent masterComponent) {
+		this.masterComponent = masterComponent;
 	}
 	
-	public void remove(INetworkComponent component) {
-	
+	private NetworkNode addNodeToNetwork(INetworkComponent component) {
+		NetworkNode newNode = new NetworkNode(component, this);
+		this.networkNodes.add(newNode);
+		this.networkComponents.add(component);
+		this.nodeToComponent.put(newNode, component);
+		this.componentToNode.put(component, newNode);
+		return newNode;
 	}
 	
-	public Collection<INetworkComponent> getComponents() {
-		return null;
+	private ArrayList<IEnergyCapacitor> getEnergyCapacitorBlocksOnNetwork() {
+		ArrayList<IEnergyCapacitor> capacitors = new ArrayList<IEnergyCapacitor>();
+		for (INetworkComponent component : this.nodeToComponent.values()) {
+			for (INetworkComponent neighbor : component.getNeighbors()) {
+				if (neighbor instanceof IEnergyCapacitor && !capacitors.contains(neighbor)) {
+					capacitors.add(((IEnergyCapacitor) neighbor));
+				}
+			}
+		}
+		return capacitors;
 	}
 	
-	public Collection<INetworkComponent> getNeighbors(INetworkComponent component) {
-		return this.nodesToNetworkComponents.values();
+	private ArrayList<IEnergyProducer> getEnergyProducerBlocksOnNetwork() {
+		ArrayList<IEnergyProducer> producers = new ArrayList<IEnergyProducer>();
+		for (INetworkComponent component : this.nodeToComponent.values()) {
+			for (INetworkComponent neighbor : component.getNeighbors()) {
+				if (neighbor instanceof IEnergyProducer && !producers.contains(neighbor)) {
+					producers.add(((IEnergyProducer) neighbor));
+				}
+			}
+		}
+		return producers;
 	}
 	
-	public boolean contains(INetworkComponent component) {
-		return this.networkComponentsToNodes.get(component) != null;
+	private ArrayList<IEnergyConsumer> getEnergyConsumerBlocksOnNetwork() {
+		ArrayList<IEnergyConsumer> consumers = new ArrayList<IEnergyConsumer>();
+		for (INetworkComponent component : this.nodeToComponent.values()) {
+			for (INetworkComponent neighbor : component.getNeighbors()) {
+				if (neighbor instanceof IEnergyConsumer && !consumers.contains(neighbor)) {
+					consumers.add(((IEnergyConsumer) neighbor));
+				}
+			}
+		}
+		return consumers;
 	}
 	
-	public boolean canAcceptPacket(ElectricPacket packet) {
-		Iterator<INetworkComponent> itter = this.getComponents().iterator();
-		while (itter.hasNext()) {
-			INetworkComponent component = itter.next();
-			if (component instanceof TileEntityBatteryBox && ((TileEntityBatteryBox) component).canAcceptElectricPacket(packet)) {
-				return true;
+	public boolean canAcceptEnergyPacket(ElectricPacket packet) {
+		if (this.getEnergyCapacitorBlocksOnNetwork().size() != 0 || this.getEnergyConsumerBlocksOnNetwork().size() != 0) {
+			for (IEnergyCapacitor capacitor : this.getEnergyCapacitorBlocksOnNetwork()) {
+				if (capacitor.canAcceptElectricPacket(packet)) {
+					return true;
+				}
+			}
+			for (IEnergyConsumer consumer : this.getEnergyConsumerBlocksOnNetwork()) {
+				if (consumer.canAcceptElectricPacket(packet)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 	
-	public void injectPacket(ElectricPacket packet) {
-		Iterator<INetworkComponent> itter = this.getComponents().iterator();
-		while (itter.hasNext()) {
-			INetworkComponent component = itter.next();
-			if (component instanceof TileEntityBatteryBox) {
-				((TileEntityBatteryBox) component).recieveElectricPacket(packet);
+	public void injectEnergyPacket(ElectricPacket packet) {
+		if (this.getEnergyCapacitorBlocksOnNetwork().size() != 0 || this.getEnergyConsumerBlocksOnNetwork().size() != 0) {
+			for (IEnergyCapacitor capacitor : this.getEnergyCapacitorBlocksOnNetwork()) {
+				if (capacitor.canAcceptElectricPacket(packet)) {
+					capacitor.acceptEnergyPacket(packet);
+					return;
+				}
+			}
+			for (IEnergyConsumer consumer : this.getEnergyConsumerBlocksOnNetwork()) {
+				if (consumer.canAcceptElectricPacket(packet)) {
+					consumer.acceptEnergyPacket(packet);
+					return;
+				}
 			}
 		}
-	}
-	
-	private class EnergyNetNode {
-		
-		private EnergyNetwork		network;
-		private INetworkComponent	component;
-									
-		public EnergyNetNode(EnergyNetwork network, INetworkComponent component) {
-			this.network = network;
-			this.component = component;
-		}
-		
-		public INetworkComponent getComponent() {
-			return this.component;
-		}
-		
-		public EnergyNetwork getNetwork() {
-			return this.network;
-		}
-		
 	}
 	
 }

@@ -1,14 +1,7 @@
 package com.austindorff.mechanica.energy;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-
-public interface IEnergyProducer {
+public interface IEnergyProducer extends INetworkComponent {
 	
-	float getMinecraftAmperesProduced();
-		
-	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
-	
-	boolean canFeedEnergyToNetworkInDirection(EnumFacing facing);
+	int getMinecraftAmperesProducedPerTick();
 
 }

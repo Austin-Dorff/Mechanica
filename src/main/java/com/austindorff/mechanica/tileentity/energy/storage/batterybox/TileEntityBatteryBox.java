@@ -16,12 +16,7 @@ public class TileEntityBatteryBox extends TileEntityEnergyStorageBlockBase {
 	}
 
 	@Override
-	public boolean canAcceptMinecraftAmperes(float voltage) {
-		return voltage <= 32;
-	}
-
-	@Override
-	public float getMinecraftAmperesOutput() {
+	public int getMinecraftAmperesOutput() {
 		return 32;
 	}
 }

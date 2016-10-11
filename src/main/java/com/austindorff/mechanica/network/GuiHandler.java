@@ -4,8 +4,8 @@ import com.austindorff.mechanica.client.gui.energy.producer.GuiCoalGenerator;
 import com.austindorff.mechanica.client.gui.machine.GuiAdvancedFurnaceCasing;
 import com.austindorff.mechanica.container.energy.producer.ContainerCoalGenerator;
 import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
 import com.austindorff.mechanica.tileentity.energy.producer.coalgenerator.TileEntityCoalGenerator;
-import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

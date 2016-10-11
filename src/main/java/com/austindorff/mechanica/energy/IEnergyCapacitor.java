@@ -1,8 +1,6 @@
 package com.austindorff.mechanica.energy;
 
-import net.minecraft.util.EnumFacing;
-
-public interface IEnergyCapacitor {
+public interface IEnergyCapacitor extends INetworkComponent {
 
 	boolean isFull();
 	
@@ -10,14 +8,10 @@ public interface IEnergyCapacitor {
 	
 	boolean isPartiallyFull();
 	
-	boolean canAcceptMinecraftAmperes(float minecraftAmperes);
+	void acceptEnergyPacket(ElectricPacket packet);
 	
-	float getMinecraftAmperesOutput();
+	boolean canAcceptElectricPacket(ElectricPacket packet);
 	
-	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
-	
-	boolean canFeedEnergyToNetworkInDirection(EnumFacing facing);
-	
-	boolean canRecieveEnergyFromNetworkInDirection(EnumFacing facing);
+	int getMinecraftAmperesOutput();
 	
 }

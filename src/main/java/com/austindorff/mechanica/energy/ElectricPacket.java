@@ -2,27 +2,24 @@ package com.austindorff.mechanica.energy;
 
 public class ElectricPacket {
 	
-	private float	minecraftAmperes;
+	private int	minecraftAmperes;
+	private INetworkComponent sender;
 					
-	public ElectricPacket(float minecraftAmperes) {
+	public ElectricPacket(INetworkComponent sender, int minecraftAmperes) {
 		this.minecraftAmperes = minecraftAmperes;
+		this.sender = sender;
 	}
 	
 	public ElectricPacket() {
-		this(0);
+		this(null, 0);
 	}
 	
-	public float getMinecraftAmperes() {
+	public int getMinecraftAmperes() {
 		return this.minecraftAmperes;
 	}
 	
-	public ElectricPacket join(ElectricPacket[] packets) {
-		
-		float totalMinecraftAmperes = 0;
-		for (ElectricPacket packet : packets) {
-			totalMinecraftAmperes += packet.getMinecraftAmperes();
-		}
-		return new ElectricPacket(totalMinecraftAmperes);
+	public INetworkComponent getSender() {
+		return this.sender;
 	}
 	
 }

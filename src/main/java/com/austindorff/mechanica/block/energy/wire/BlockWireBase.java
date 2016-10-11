@@ -36,11 +36,11 @@ public class BlockWireBase extends BlockContainerBase {
 	
 	public enum EnumWireType implements IStringSerializable {
 		COPPER("copper", false, true, 0, 12);
-		private float	minMinecraftAmperes, maxMinecraftAmperes;
+		private int	minMinecraftAmperes, maxMinecraftAmperes;
 		private boolean	hasMinMinecraftAmperes, hasMaxMinecraftAmperes;
 		private String	name;
 						
-		private EnumWireType(String name, boolean hasMinMinecraftAmperes, boolean hasMaxMinecraftAmperes, float minMinecraftAmperes, float maxMinecraftAmperes) {
+		private EnumWireType(String name, boolean hasMinMinecraftAmperes, boolean hasMaxMinecraftAmperes, int minMinecraftAmperes, int maxMinecraftAmperes) {
 			this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
 			this.hasMaxMinecraftAmperes = hasMaxMinecraftAmperes;
 			this.hasMinMinecraftAmperes = hasMinMinecraftAmperes;
@@ -74,11 +74,11 @@ public class BlockWireBase extends BlockContainerBase {
 			return this.hasMinMinecraftAmperes;
 		}
 		
-		public float maxMinecraftAmperes() {
+		public int maxMinecraftAmperes() {
 			return this.maxMinecraftAmperes;
 		}
 		
-		public float minMinecraftAmperes() {
+		public int minMinecraftAmperes() {
 			return this.minMinecraftAmperes;
 		}
 		

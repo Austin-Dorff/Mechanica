@@ -1,6 +1,6 @@
 package com.austindorff.mechanica.tileentity;
 
-import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 

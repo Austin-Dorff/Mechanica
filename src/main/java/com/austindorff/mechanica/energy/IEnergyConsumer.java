@@ -1,22 +1,11 @@
 package com.austindorff.mechanica.energy;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-
-public interface IEnergyConsumer {
+public interface IEnergyConsumer extends IEnergyCurrentRange {
 	
-	boolean hasMinMinecraftAmperes();
+	int getCurrentMinecraftAmperesConsumption();
 	
-	boolean hasMaxMinecraftAmperes();
+	boolean canAcceptElectricPacket(ElectricPacket packet);
 	
-	float getMinMinecraftAmperes();
-
-	float getMaxMinecraftAmperes();
-	
-	float getCurrentMinecraftAmperesConsumption();
-	
-	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
-	
-	boolean canRecieveEnergyFromNetworkInDirection(EnumFacing facing);
+	void acceptEnergyPacket(ElectricPacket packet);
 	
 }

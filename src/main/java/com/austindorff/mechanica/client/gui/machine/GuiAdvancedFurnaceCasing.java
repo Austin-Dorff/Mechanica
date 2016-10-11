@@ -8,7 +8,7 @@ import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.client.gui.component.ModeButton;
 import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
 import com.austindorff.mechanica.network.packet.block.machine.PacketAdvancedFurnace;
-import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

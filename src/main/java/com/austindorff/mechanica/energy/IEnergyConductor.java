@@ -3,17 +3,12 @@ package com.austindorff.mechanica.energy;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public interface IEnergyConductor {
-		
-	boolean hasMinMinecraftAmperes();
+public interface IEnergyConductor extends IEnergyCurrentRange {
 	
-	boolean hasMaxMinecraftAmperes();
+	boolean hasLossOverDistance();
 	
-	float getMinMinecraftAmperes();
+	int getLossPerUnitDistance();
 	
-	float getMaxMinecraftAmperes();
+	void setUnitDistanceForLoss(int distance);
 	
-	boolean canConnectToEnergyNetworkInDirection(EnumFacing facing);
-	
-	boolean canFeedEnergyToNetworkInDirection(EnumFacing facing);
 }

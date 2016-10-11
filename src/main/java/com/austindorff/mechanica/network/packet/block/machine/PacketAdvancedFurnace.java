@@ -2,7 +2,7 @@ package com.austindorff.mechanica.network.packet.block.machine;
 
 import javax.annotation.Nullable;
 
-import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;

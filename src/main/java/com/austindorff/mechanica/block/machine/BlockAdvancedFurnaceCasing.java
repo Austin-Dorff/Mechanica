@@ -4,7 +4,7 @@ import com.austindorff.mechanica.Mechanica;
 import com.austindorff.mechanica.Reference;
 import com.austindorff.mechanica.block.BlockContainerBase;
 import com.austindorff.mechanica.network.GuiHandler;
-import com.austindorff.mechanica.tileentity.machine.TileEntityAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;

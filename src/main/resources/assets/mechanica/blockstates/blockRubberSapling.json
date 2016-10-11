@@ -2,19 +2,8 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {
-            "all": "mechanica:blocks/RubberSapling"
-        }
-    },
-    "variants": {
-        "stage": {
-            0: {
-                "model": "mechanica:blockRubberSapling"
-            },
-            1: {
-                "model": "mechanica:blockRubberSapling"
-            }
-        },
-        "inventory": {
+            "all": "mechanica:blocks/RubberSapling",
+            "model": "mechanica:blockRubberSapling"
         }
     }
 }

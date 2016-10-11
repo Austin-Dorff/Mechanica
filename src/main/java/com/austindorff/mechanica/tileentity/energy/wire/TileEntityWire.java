@@ -1,9 +1,14 @@
 package com.austindorff.mechanica.tileentity.energy.wire;
 
+import java.util.ArrayList;
+
 import com.austindorff.mechanica.block.energy.wire.BlockWireBase;
 import com.austindorff.mechanica.block.energy.wire.BlockWireBase.EnumWireType;
 import com.austindorff.mechanica.energy.ElectricPacket;
+import com.austindorff.mechanica.energy.EnergyNetwork;
+import com.austindorff.mechanica.energy.EnumDirection;
 import com.austindorff.mechanica.energy.IEnergyConductor;
+import com.austindorff.mechanica.energy.INetworkComponent;
 import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
 
 import net.minecraft.block.Block;
@@ -11,13 +16,12 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergyConductor {
 	
-	private boolean isPowered = false;
-	private float minecraftAmperes;
+	public TileEntityWire() {
+	}
 	
 	@Override
 	public boolean isCorrectTileEntity(TileEntity tile) {
@@ -60,7 +64,7 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	}
 	
 	@Override
-	public float getMinMinecraftAmperes() {
+	public int getMinMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
@@ -71,7 +75,7 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	}
 	
 	@Override
-	public float getMaxMinecraftAmperes() {
+	public int getMaxMinecraftAmperes() {
 		IProperty<EnumWireType> property = ((IProperty<EnumWireType>) getBlockStateContainer().getProperty("wire_type"));
 		switch (property.getName()) {
 			case "Copper": {
@@ -82,80 +86,75 @@ public class TileEntityWire extends TileEntityEnergyBlockBase implements IEnergy
 	}
 	
 	@Override
-	public boolean canConnectToEnergyNetworkInDirection(EnumFacing facing) {
-		switch (facing) {
-			case UP: {
-				return this.isNeighborUp();
-			}
-			case DOWN: {
-				return this.isNeighborDown();
-			}
-			case NORTH: {
-				return this.isNeighborNorth();
-			}
-			case EAST: {
-				return this.isNeighborEast();
-			}
-			case SOUTH: {
-				return this.isNeighborSouth();
-			}
-			case WEST: {
-				return this.isNeighborWest();
-			}
-		}
-		return false;
-	}
-	
-	public boolean isPowered() {
-		return this.isPowered;
-	}
-	
-	@Override
-	public boolean canFeedEnergyToNetworkInDirection(EnumFacing facing) {
-		return this.canConnectToEnergyNetworkInDirection(facing);
-	}
-
-	@Override
 	public boolean canAcceptElectricPacket(ElectricPacket packet) {
-		return isPowered == false;
-	}
-
-	@Override
-	public boolean canSendElectricPacket(ElectricPacket packet) {
 		return true;
 	}
-
+	
+	@Override
+	public boolean canSendElectricPacket(ElectricPacket packet) {
+		return this.getEnergyNetworks().get(0) != null && this.getEnergyNetworks().get(0).canAcceptEnergyPacket(packet);
+	}
+	
 	@Override
 	public void sendElectricPacket(ElectricPacket packet) {
-		this.getNetwork().injectPacket(packet);
-		this.isPowered = false;
-		this.minecraftAmperes = 0;
+		if (this.getEnergyNetworks().get(0).canAcceptEnergyPacket(packet)) {
+			this.getEnergyNetworks().get(0).injectEnergyPacket(packet);
+		}
 	}
-
+	
 	@Override
 	public void recieveElectricPacket(ElectricPacket packet) {
-		this.isPowered = true;
-		this.minecraftAmperes = packet.getMinecraftAmperes();
+	
 	}
-
+	
 	@Override
 	public boolean doesTransferEnergy() {
 		return true;
 	}
-
+	
+	@Override
+	public boolean doesOutputEnergy() {
+		return false;
+	}
+	
 	@Override
 	public boolean doesUseEnergy() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean doesStoreEnergy() {
 		return false;
 	}
-
+	
 	@Override
 	public boolean doesProduceEnergy() {
 		return false;
+	}
+	
+	@Override
+	public boolean hasLossOverDistance() {
+		return false;
+	}
+	
+	@Override
+	public int getLossPerUnitDistance() {
+		return 0;
+	}
+	
+	@Override
+	public void setUnitDistanceForLoss(int distance) {
+	
+	}
+	
+	@Override
+	public boolean canFeedEnergyToNetworkInDirection(EnumDirection direction) {
+		return true;
+	}
+	
+	@Override
+	public boolean canRecieveEnergyFromNetworkConnectionInDirection(EnumDirection direction) {
+		return true;
 	}
 	
 }

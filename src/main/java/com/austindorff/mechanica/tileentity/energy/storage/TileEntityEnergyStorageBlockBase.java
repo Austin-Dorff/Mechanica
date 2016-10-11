@@ -1,24 +1,32 @@
 package com.austindorff.mechanica.tileentity.energy.storage;
 
-import com.austindorff.mechanica.energy.ElectricPacket;
-import com.austindorff.mechanica.energy.IEnergyCapacitor;
-import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
+import java.util.ArrayList;
 
+import com.austindorff.mechanica.energy.ElectricPacket;
+import com.austindorff.mechanica.energy.EnergyNetwork;
+import com.austindorff.mechanica.energy.EnumDirection;
+import com.austindorff.mechanica.energy.IEnergyCapacitor;
+import com.austindorff.mechanica.energy.INetworkComponent;
+import com.austindorff.mechanica.tileentity.energy.TileEntityEnergyBlockBase;
+import com.austindorff.mechanica.tileentity.energy.wire.TileEntityWire;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyBlockBase implements IEnergyCapacitor {
 	
-	private float storedEnergy;
-	private float storageLimit;
+	private int storedEnergy;
+	private int storageLimit;
 	
-	public TileEntityEnergyStorageBlockBase(float storageLimit) {
+	public TileEntityEnergyStorageBlockBase(int storageLimit) {
 		this.storageLimit = storageLimit;
 		this.storedEnergy = 0;
 	}
 	
-	public float getEnergyStored() {
+	public int getEnergyStored() {
 		return this.storedEnergy;
 	}
 
@@ -49,58 +57,32 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 
 	@Override
 	public boolean canSendElectricPacket(ElectricPacket packet) {
-		return getNetwork().canAcceptPacket(packet);
-	}
-
-	@Override
-	public void sendElectricPacket(ElectricPacket packet) {
-		this.getNetwork().injectPacket(packet);
-	}
-
-	@Override
-	public void recieveElectricPacket(ElectricPacket packet) {
-		this.storedEnergy += packet.getMinecraftAmperes();
-	}
-
-	@Override
-	public boolean canConnectToEnergyNetworkInDirection(EnumFacing facing) {
-		switch (facing) {
-			case UP: {
-				return this.isNeighborUp();
-			}
-			case DOWN: {
-				return this.isNeighborDown();
-			}
-			case NORTH: {
-				return this.isNeighborNorth();
-			}
-			case EAST: {
-				return this.isNeighborEast();
-			}
-			case SOUTH: {
-				return this.isNeighborSouth();
-			}
-			case WEST: {
-				return this.isNeighborWest();
+		for (EnergyNetwork net : this.getEnergyNetworks()) {
+			if (net.canAcceptEnergyPacket(packet)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canFeedEnergyToNetworkInDirection(EnumFacing facing) {
-		return this.getNetwork().canAcceptPacket(new ElectricPacket(this.getMinecraftAmperesOutput()));
+	public void sendElectricPacket(ElectricPacket packet) {
+		for (EnergyNetwork net : this.getEnergyNetworks()) {
+			if (net.canAcceptEnergyPacket(packet)) {
+				net.injectEnergyPacket(packet);
+				break;
+			}
+		}
+		this.markDirty();
 	}
 
 	@Override
-	public boolean canRecieveEnergyFromNetworkInDirection(EnumFacing facing) {
-		return false;
+	public void recieveElectricPacket(ElectricPacket packet) {
+		this.storedEnergy += packet.getMinecraftAmperes();
+		this.markDirty();
 	}
 
-	public abstract float getMinecraftAmperesOutput();
-
-	@Override
-	public abstract boolean canAcceptMinecraftAmperes(float minecraftAmperes);
+	public abstract int getMinecraftAmperesOutput();
 
 	@Override
 	public abstract void updateBlockState(BlockPos coords);
@@ -124,6 +106,58 @@ public abstract class TileEntityEnergyStorageBlockBase extends TileEntityEnergyB
 	@Override
 	public boolean doesProduceEnergy() {
 		return false;
+	}
+	
+	@Override
+	public boolean doesOutputEnergy() {
+		return true;
+	}
+
+	@Override
+	public void acceptEnergyPacket(ElectricPacket packet) {
+		this.storedEnergy += packet.getMinecraftAmperes();
+		this.markDirty();
+	}
+
+	@Override
+	public boolean canFeedEnergyToNetworkInDirection(EnumDirection direction) {
+		return true;
+	}
+
+	@Override
+	public boolean canRecieveEnergyFromNetworkConnectionInDirection(EnumDirection direction) {
+		return true;
+	}
+	
+	@Override
+	public ArrayList<EnergyNetwork> getEnergyNetworks() {
+		ArrayList<EnergyNetwork> networks = new ArrayList<EnergyNetwork>();
+		for (int i = 0; i < 6; i++) {
+			networks.add(null);
+		}
+		int index = 0;
+		for (INetworkComponent neighbor : this.getNeighbors()) {
+			if (neighbor instanceof TileEntityWire) {
+				if ((neighbor.getEnergyNetworks().size() > 0) && (neighbor.getEnergyNetworks().get(0) != null)) {
+					networks.set(index, neighbor.getEnergyNetworks().get(0));
+				}
+			}
+			index++;
+		}
+		return networks;
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("storedEnergy", this.storedEnergy);
+		return compound;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.storedEnergy = compound.getInteger("storedEnergy");
 	}
 
 }
