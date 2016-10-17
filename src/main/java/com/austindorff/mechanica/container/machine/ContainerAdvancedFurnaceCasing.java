@@ -2,7 +2,7 @@ package com.austindorff.mechanica.container.machine;
 
 import javax.annotation.Nullable;
 
-import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
+import com.austindorff.mechanica.tileentity.advancedfurnace.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

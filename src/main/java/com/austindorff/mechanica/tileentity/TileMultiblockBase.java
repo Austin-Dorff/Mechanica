@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TileMultiblockBase extends TileEntityBase implements ITickable {
+public abstract class TileMultiblockBase extends TileBase implements ITickable {
 	
 	private boolean	hasMaster, isMaster;
 	private int		masterX, masterY, masterZ;

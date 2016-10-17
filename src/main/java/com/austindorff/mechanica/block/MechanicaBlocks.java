@@ -3,11 +3,8 @@ package com.austindorff.mechanica.block;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.austindorff.mechanica.Reference;
-import com.austindorff.mechanica.block.energy.producer.BlockCoalGenerator;
-import com.austindorff.mechanica.block.energy.storage.BlockBatteryBox;
-import com.austindorff.mechanica.block.energy.wire.BlockWireBase;
 import com.austindorff.mechanica.block.machine.BlockAdvancedFurnaceCasing;
+import com.austindorff.mechanica.block.networking.pipe.BlockNetworkingPipe;
 import com.austindorff.mechanica.block.worldgen.BlockOre;
 import com.austindorff.mechanica.block.worldgen.BlockTreeLeaves;
 import com.austindorff.mechanica.block.worldgen.BlockTreeLog;
@@ -46,10 +43,7 @@ public class MechanicaBlocks {
 	
 	private static void initSingletonBlockClasses() {
 		MechanicaBlocks.BLOCKS.put(BlockAdvancedFurnaceCasing.NAME, new BlockAdvancedFurnaceCasing());
-		MechanicaBlocks.BLOCKS.put(BlockWireBase.EnumWireType.COPPER.getUnlocalizedName(), new BlockWireBase(BlockWireBase.EnumWireType.COPPER.getRegistryName(), BlockWireBase.EnumWireType.COPPER.getUnlocalizedName(), Material.ROCK, 0.5F, 0.5F));
-		MechanicaBlocks.BLOCKS.put(BlockBatteryBox.UNLOC_NAME, new BlockBatteryBox(BlockBatteryBox.UNLOC_NAME, BlockBatteryBox.REG_NAME));
-		MechanicaBlocks.BLOCKS.put(BlockCoalGenerator.UNLOC_NAME, new BlockCoalGenerator(BlockCoalGenerator.UNLOC_NAME, BlockCoalGenerator.REG_NAME));
-
+		MechanicaBlocks.BLOCKS.put(BlockNetworkingPipe.EnumNetworkingPipeType.STONE.getUnlocalizedName(), new BlockNetworkingPipe(BlockNetworkingPipe.EnumNetworkingPipeType.STONE.getRegistryName(), BlockNetworkingPipe.EnumNetworkingPipeType.STONE.getUnlocalizedName(), Material.ROCK, 0.5F, 0.5F, BlockNetworkingPipe.EnumNetworkingPipeType.STONE));
 	}
 
 	private static void initSubBlockClasses() {

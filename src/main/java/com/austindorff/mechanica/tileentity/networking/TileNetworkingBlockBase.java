@@ -1,25 +1,24 @@
-package com.austindorff.mechanica.tileentity.energy;
+package com.austindorff.mechanica.tileentity.networking;
 
 import java.util.ArrayList;
 
-import com.austindorff.mechanica.energy.ElectricPacket;
-import com.austindorff.mechanica.energy.EnergyNetwork;
-import com.austindorff.mechanica.energy.EnumDirection;
-import com.austindorff.mechanica.energy.INetworkComponent;
+import com.austindorff.mechanica.networking.EnumDirection;
+import com.austindorff.mechanica.networking.INetworkComponent;
+import com.austindorff.mechanica.networking.Network;
 import com.austindorff.mechanica.tileentity.connectable.TileEntityConnectable;
-import com.austindorff.mechanica.tileentity.energy.wire.TileEntityWire;
+import com.austindorff.mechanica.tileentity.networking.pipe.TileNetworkingPipeBase;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable implements INetworkComponent, ITickable {
+public abstract class TileNetworkingBlockBase extends TileEntityConnectable implements INetworkComponent, ITickable {
 	
 	private boolean						hasBeenPlaced	= false;
 														
-	private ArrayList<EnergyNetwork>	networks		= new ArrayList<EnergyNetwork>();
+	private ArrayList<Network>	networks		= new ArrayList<Network>();
 														
-	public TileEntityEnergyBlockBase() {
+	public TileNetworkingBlockBase() {
 	}
 	
 	@Override
@@ -45,39 +44,31 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable im
 	}
 	
 	public boolean isConnectableNeighborNorth() {
-		return getNeighborNorth() != null && getNeighborNorth() instanceof TileEntityEnergyBlockBase;
+		return getNeighborNorth() != null && getNeighborNorth() instanceof TileNetworkingBlockBase;
 	}
 	
 	public boolean isConnectableNeighborEast() {
-		return getNeighborEast() != null && getNeighborEast() instanceof TileEntityEnergyBlockBase;
+		return getNeighborEast() != null && getNeighborEast() instanceof TileNetworkingBlockBase;
 	}
 	
 	public boolean isConnectableNeighborSouth() {
-		return getNeighborSouth() != null && getNeighborSouth() instanceof TileEntityEnergyBlockBase;
+		return getNeighborSouth() != null && getNeighborSouth() instanceof TileNetworkingBlockBase;
 	}
 	
 	public boolean isConnectableNeighborWest() {
-		return getNeighborWest() != null && getNeighborWest() instanceof TileEntityEnergyBlockBase;
+		return getNeighborWest() != null && getNeighborWest() instanceof TileNetworkingBlockBase;
 	}
 	
 	public boolean isConnectableNeighborUp() {
-		return getNeighborUp() != null && getNeighborUp() instanceof TileEntityEnergyBlockBase;
+		return getNeighborUp() != null && getNeighborUp() instanceof TileNetworkingBlockBase;
 	}
 	
 	public boolean isConnectableNeighborDown() {
-		return getNeighborDown() != null && getNeighborDown() instanceof TileEntityEnergyBlockBase;
+		return getNeighborDown() != null && getNeighborDown() instanceof TileNetworkingBlockBase;
 	}
 	
 	@Override
 	public abstract boolean isCorrectTileEntity(TileEntity tile);
-	
-	public abstract boolean canAcceptElectricPacket(ElectricPacket packet);
-	
-	public abstract boolean canSendElectricPacket(ElectricPacket packet);
-	
-	public abstract void sendElectricPacket(ElectricPacket packet);
-	
-	public abstract void recieveElectricPacket(ElectricPacket packet);
 	
 	@Override
 	public abstract void updateBlockState(BlockPos coords);
@@ -91,17 +82,16 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable im
 	}
 	
 	private void incorporate() {
-		if (this instanceof TileEntityWire) {
-			EnergyNetwork.incorporateComponent(this);
+		if (this instanceof TileNetworkingPipeBase) {
+			Network.incorporateComponent((TileNetworkingPipeBase)this);
 		}
 	}
 	
 	@Override
 	public void invalidate() {
-		if (this instanceof TileEntityWire) {
-			System.out.println("HELLO");
-			if (this.getEnergyNetworks().get(0) != null) {
-				this.getEnergyNetworks().get(0).removeComponent(this);
+		if (this instanceof TileNetworkingPipeBase) {
+			if (this.getNetworks().get(0) != null) {
+				this.getNetworks().get(0).removeComponent((TileNetworkingPipeBase)this);
 			}
 		}
 		super.invalidate();
@@ -113,19 +103,7 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable im
 	}
 	
 	@Override
-	public abstract boolean doesTransferEnergy();
-	
-	@Override
-	public abstract boolean doesUseEnergy();
-	
-	@Override
-	public abstract boolean doesStoreEnergy();
-	
-	@Override
-	public abstract boolean doesProduceEnergy();
-	
-	@Override
-	public boolean doesBelongToNetwork(EnergyNetwork network) {
+	public boolean doesBelongToNetwork(Network network) {
 		return this.networks.contains(network);
 	}
 	
@@ -143,34 +121,25 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable im
 	}
 	
 	@Override
-	public abstract boolean doesOutputEnergy();
-	
-	@Override
 	public boolean hasNetworkConnectionInDirection(EnumDirection direction) {
 		return this.networks.size() > 0 && this.networks.size() <= direction.getBlockFace() && this.networks.get(direction.getBlockFace()) != null;
 	}
 	
 	@Override
-	public abstract boolean canFeedEnergyToNetworkInDirection(EnumDirection direction);
-	
-	@Override
-	public abstract boolean canRecieveEnergyFromNetworkConnectionInDirection(EnumDirection direction);
-	
-	@Override
-	public EnergyNetwork getEnergyNetworkInDirection(EnumDirection direction) {
-		if (getEnergyNetworks() == null || getEnergyNetworks().size() <= direction.getBlockFace()) {
+	public Network getNetworkInDirection(EnumDirection direction) {
+		if (getNetworks() == null || getNetworks().size() <= direction.getBlockFace()) {
 			return null;
 		}
-		return getEnergyNetworks().get(direction.getBlockFace());
+		return getNetworks().get(direction.getBlockFace());
 	}
 	
 	@Override
-	public ArrayList<EnergyNetwork> getEnergyNetworks() {
+	public ArrayList<Network> getNetworks() {
 		return this.networks;
 	}
 	
 	@Override
-	public void setEnergyNetworkInDirection(EnergyNetwork network, EnumDirection direction) {
+	public void setNetworkInDirection(Network network, EnumDirection direction) {
 		if (direction == EnumDirection.ALL) {
 			if (this.networks.size() < 6) {
 				for (int i = 0; i < 6; i++) {
@@ -188,6 +157,11 @@ public abstract class TileEntityEnergyBlockBase extends TileEntityConnectable im
 			}
 			this.networks.set(direction.getBlockFace(), network);
 		}
+	}
+
+	@Override
+	public ArrayList<INetworkComponent> getNeighboringNetworkingPipes() {
+		return this.getNeighbors();
 	}
 	
 }

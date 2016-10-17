@@ -1,11 +1,8 @@
 package com.austindorff.mechanica.network;
 
-import com.austindorff.mechanica.client.gui.energy.producer.GuiCoalGenerator;
 import com.austindorff.mechanica.client.gui.machine.GuiAdvancedFurnaceCasing;
-import com.austindorff.mechanica.container.energy.producer.ContainerCoalGenerator;
 import com.austindorff.mechanica.container.machine.ContainerAdvancedFurnaceCasing;
-import com.austindorff.mechanica.tileentity.advancedfurnacecasing.TileEntityAdvancedFurnaceCasing;
-import com.austindorff.mechanica.tileentity.energy.producer.coalgenerator.TileEntityCoalGenerator;
+import com.austindorff.mechanica.tileentity.advancedfurnace.TileEntityAdvancedFurnaceCasing;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -21,8 +18,6 @@ public class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		if (id == ADVANCED_FURNACE_CASING) {
 			return new ContainerAdvancedFurnaceCasing(player.inventory, ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z))));
-		} else if (id == COAL_GENERATOR) {
-			return new ContainerCoalGenerator(player.inventory, ((TileEntityCoalGenerator) world.getTileEntity(new BlockPos(x, y, z))));
 		}		
 		return null;
 	}
@@ -32,10 +27,7 @@ public class GuiHandler implements IGuiHandler {
 	    if (id == ADVANCED_FURNACE_CASING) {
 	    	TileEntityAdvancedFurnaceCasing tile = ((TileEntityAdvancedFurnaceCasing) world.getTileEntity(new BlockPos(x, y, z)));
 	        return new GuiAdvancedFurnaceCasing(player.inventory, tile, new ContainerAdvancedFurnaceCasing(player.inventory, tile)); 
-	    } else if (id == COAL_GENERATOR) {
-	    	TileEntityCoalGenerator tile = ((TileEntityCoalGenerator) world.getTileEntity(new BlockPos(x, y, z)));
-	        return new GuiCoalGenerator(player.inventory, tile, new ContainerCoalGenerator(player.inventory, tile));
-		}	
+	    }
 	    return null;
 	}
 	

@@ -1,11 +1,11 @@
 package com.austindorff.mechanica.tileentity.connectable;
 
-import com.austindorff.mechanica.tileentity.TileEntityBase;
+import com.austindorff.mechanica.tileentity.TileBase;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TileEntityConnectable extends TileEntityBase {
+public abstract class TileEntityConnectable extends TileBase {
 		
 	@Override
 	public abstract boolean isCorrectTileEntity(TileEntity tile);

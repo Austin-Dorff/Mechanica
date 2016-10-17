@@ -3,7 +3,7 @@ package com.austindorff.mechanica.tileentity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TileEntityBase extends TileEntity {
+public abstract class TileBase extends TileEntity {
 	
 	public abstract boolean isCorrectTileEntity(TileEntity tile);
 	

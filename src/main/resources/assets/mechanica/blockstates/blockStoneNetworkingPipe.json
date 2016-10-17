@@ -1,0 +1,87 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "mechanica:blockStoneNetworkingPipeCore"
+    },
+    "variants": {
+        "render_core": {
+            "true": {
+
+            },
+            "false": {
+              "model": "mechanica:blockStoneNetworkingPipeNoCore"
+            }
+        },
+        "type": {
+            "stone": {
+
+            }
+        },
+        "up": {
+            "true": {
+                "submodel": {
+                    "up": { "model": "mechanica:blockStoneNetworkingPipe_North", "x": 270}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "down": {
+            "true": {
+                "submodel": {
+                    "down": { "model": "mechanica:blockStoneNetworkingPipe_North", "x": 90}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "north": {
+            "true": {
+                "submodel": {
+                    "north": { "model": "mechanica:blockStoneNetworkingPipe_North" }
+                }
+            },
+            "false": {
+
+            }
+        },
+        "east": {
+            "true": {
+                "submodel": {
+                    "east": { "model": "mechanica:blockStoneNetworkingPipe_North", "y": 90}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "south": {
+            "true": {
+                "submodel": {
+                    "south": { "model": "mechanica:blockStoneNetworkingPipe_North", "y": 180}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "west": {
+            "true": {
+                "submodel": {
+                    "west": { "model": "mechanica:blockStoneNetworkingPipe_North", "y": 270}
+                }
+            },
+            "false": {
+
+            }
+        },
+        "normal": {
+            "model": "mechanica:blockStoneNetworkingPipeCore"
+        },
+        "inventory": {
+            "model": "mechanica:blockStoneNetworkingPipeCore"
+        }
+    }
+}

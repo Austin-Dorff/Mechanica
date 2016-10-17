@@ -1,4 +1,4 @@
-package com.austindorff.mechanica.tileentity.advancedfurnacecasing;
+package com.austindorff.mechanica.tileentity.advancedfurnace;
 
 import com.austindorff.mechanica.block.MechanicaBlocks;
 import com.austindorff.mechanica.block.machine.BlockAdvancedFurnaceCasing;

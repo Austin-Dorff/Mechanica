@@ -1,4 +1,4 @@
-package com.austindorff.mechanica.energy;
+package com.austindorff.mechanica.networking;
 
 import net.minecraft.util.math.BlockPos;
 
